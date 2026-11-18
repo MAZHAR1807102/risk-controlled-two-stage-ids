@@ -1,0 +1,143 @@
+{
+  "run": "runs/seed5",
+  "seed": 5,
+  "versions": {
+    "xgboost": "3.4.1",
+    "sklearn": "1.9.1",
+    "numpy": "2.5.4",
+    "python": "3.13.13",
+    "machine": "macOS-27.0.1-arm64-arm-64bit-Mach-O"
+  },
+  "data": {
+    "train_rows": 5491971,
+    "val_rows": 1176851,
+    "test_rows": 1176851,
+    "test_class_counts": {
+      "Benign": 27709,
+      "BruteForce": 319,
+      "DDoS": 855981,
+      "DoS": 204245,
+      "Mirai": 66749,
+      "Recon": 8812,
+      "Spoofing": 12410,
+      "Web": 626
+    }
+  },
+  "stage1": {
+    "params": {
+      "objective": "binary:logistic",
+      "max_depth": 6,
+      "eta": 0.3,
+      "tree_method": "hist",
+      "eval_metric": "logloss"
+    },
+    "rounds": 100,
+    "weighting": "group_balanced",
+    "train_seconds": 16.497699975967407,
+    "tau_target": 0.02,
+    "tau": 0.05,
+    "tau_by_target": {
+      "1%": 0.030000000000000002,
+      "2%": 0.05,
+      "5%": 0.138
+    },
+    "test_roc_auc": 0.9997211759056844,
+    "test_pr_auc_benign": 0.9878608420781135,
+    "test_at_tau": {
+      "tau": 0.05,
+      "benign_bypass": 0.7673680031758634,
+      "overall_fnr": 0.00032023892608572306,
+      "worst_group_miss": 0.019405356332274172,
+      "stealthy_miss": 0.01655614201290206,
+      "miss_BruteForce": 0.012539184952978056,
+      "miss_DDoS": 1.1682502298532327e-06,
+      "miss_DoS": 0.0,
+      "miss_Mirai": 0.0,
+      "miss_Recon": 0.019405356332274172,
+      "miss_Spoofing": 0.015471394037066882,
+      "miss_Web": 0.0
+    }
+  },
+  "stage2": {
+    "params": {
+      "objective": "multi:softprob",
+      "num_class": 8,
+      "max_depth": 10,
+      "eta": 0.05,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "lambda": 3.0,
+      "min_child_weight": 10,
+      "tree_method": "hist",
+      "eval_metric": "mlogloss"
+    },
+    "best_iteration": 263,
+    "weighting": "sqrt",
+    "class_weights": {
+      "Benign": 3.4465610749537197,
+      "BruteForce": 31.599721367660695,
+      "DDoS": 0.620348908464846,
+      "DoS": 1.2722512193932995,
+      "Mirai": 2.2287753542887168,
+      "Recon": 6.08063853352695,
+      "Spoofing": 5.1717483619274045,
+      "Web": 23.35516982135921
+    },
+    "train_seconds": 407.9720666408539
+  },
+  "test": {
+    "single_stage": {
+      "accuracy": 0.9960300836724445,
+      "macro_f1": 0.8620885781638951,
+      "macro_recall": 0.8536616210859806,
+      "weighted_f1": 0.9960129873770859,
+      "per_class_f1": {
+        "Benign": 0.9477967553675644,
+        "BruteForce": 0.6514886164623468,
+        "DDoS": 0.9998638903411796,
+        "DoS": 0.9995276103201236,
+        "Mirai": 0.9999550561797753,
+        "Recon": 0.8577410593028519,
+        "Spoofing": 0.8884488448844885,
+        "Web": 0.5518867924528302
+      },
+      "per_class_recall": {
+        "Benign": 0.9582807030206792,
+        "BruteForce": 0.5830721003134797,
+        "DDoS": 0.999801397460925,
+        "DoS": 0.999701339078068,
+        "Mirai": 0.9999700370042997,
+        "Recon": 0.8600771674988652,
+        "Spoofing": 0.8676873489121676,
+        "Web": 0.560702875399361
+      }
+    },
+    "two_stage": {
+      "accuracy": 0.9961133567460961,
+      "macro_f1": 0.8664767147232831,
+      "macro_recall": 0.8540814703022614,
+      "weighted_f1": 0.9960892720057092,
+      "per_class_f1": {
+        "Benign": 0.9496410567005719,
+        "BruteForce": 0.6763636363636364,
+        "DDoS": 0.9998638903411796,
+        "DoS": 0.9995276103201236,
+        "Mirai": 0.9999550561797753,
+        "Recon": 0.8609075935707389,
+        "Spoofing": 0.8884120171673819,
+        "Web": 0.5571428571428572
+      },
+      "per_class_recall": {
+        "Benign": 0.9619618174600311,
+        "BruteForce": 0.5830721003134797,
+        "DDoS": 0.999801397460925,
+        "DoS": 0.999701339078068,
+        "Mirai": 0.9999700370042997,
+        "Recon": 0.8600771674988652,
+        "Spoofing": 0.867365028203062,
+        "Web": 0.560702875399361
+      }
+    }
+  },
+  "wall_seconds": 543.260479927063
+}

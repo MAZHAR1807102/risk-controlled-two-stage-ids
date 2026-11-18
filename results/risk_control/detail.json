@@ -1,0 +1,1676 @@
+{
+ "ciciot2023:point": {
+  "family": {
+   "BruteForce": [
+    4,
+    319
+   ],
+   "DDoS": [
+    1,
+    855981
+   ],
+   "DoS": [
+    0,
+    204245
+   ],
+   "Mirai": [
+    0,
+    66749
+   ],
+   "Recon": [
+    174,
+    8812
+   ],
+   "Spoofing": [
+    192,
+    12410
+   ],
+   "Web": [
+    0,
+    626
+   ]
+  },
+  "type": {
+   "Backdoor_Malware": [
+    0,
+    89
+   ],
+   "BrowserHijacking": [
+    0,
+    134
+   ],
+   "CommandInjection": [
+    0,
+    119
+   ],
+   "DDoS-ACK_Fragmentation": [
+    0,
+    7292
+   ],
+   "DDoS-HTTP_Flood": [
+    0,
+    709
+   ],
+   "DDoS-ICMP_Flood": [
+    0,
+    180447
+   ],
+   "DDoS-ICMP_Fragmentation": [
+    0,
+    11402
+   ],
+   "DDoS-PSHACK_Flood": [
+    0,
+    103326
+   ],
+   "DDoS-RSTFINFlood": [
+    0,
+    101819
+   ],
+   "DDoS-SYN_Flood": [
+    0,
+    102208
+   ],
+   "DDoS-SlowLoris": [
+    1,
+    622
+   ],
+   "DDoS-SynonymousIP_Flood": [
+    0,
+    90480
+   ],
+   "DDoS-TCP_Flood": [
+    0,
+    113735
+   ],
+   "DDoS-UDP_Flood": [
+    0,
+    136717
+   ],
+   "DDoS-UDP_Fragmentation": [
+    0,
+    7224
+   ],
+   "DNS_Spoofing": [
+    73,
+    4570
+   ],
+   "DictionaryBruteForce": [
+    4,
+    319
+   ],
+   "DoS-HTTP_Flood": [
+    0,
+    1805
+   ],
+   "DoS-SYN_Flood": [
+    0,
+    51116
+   ],
+   "DoS-TCP_Flood": [
+    0,
+    67697
+   ],
+   "DoS-UDP_Flood": [
+    0,
+    83627
+   ],
+   "MITM-ArpSpoofing": [
+    119,
+    7840
+   ],
+   "Mirai-greeth_flood": [
+    0,
+    24934
+   ],
+   "Mirai-greip_flood": [
+    0,
+    19279
+   ],
+   "Mirai-udpplain": [
+    0,
+    22536
+   ],
+   "Recon-HostDiscovery": [
+    6,
+    3331
+   ],
+   "Recon-OSScan": [
+    123,
+    2433
+   ],
+   "Recon-PingSweep": [
+    0,
+    53
+   ],
+   "Recon-PortScan": [
+    45,
+    2082
+   ],
+   "SqlInjection": [
+    0,
+    148
+   ],
+   "Uploading_Attack": [
+    0,
+    33
+   ],
+   "VulnerabilityScan": [
+    0,
+    913
+   ],
+   "XSS": [
+    0,
+    103
+   ]
+  }
+ },
+ "ciciot2023:ucb_fam": {
+  "family": {
+   "BruteForce": [
+    0,
+    319
+   ],
+   "DDoS": [
+    0,
+    855981
+   ],
+   "DoS": [
+    0,
+    204245
+   ],
+   "Mirai": [
+    0,
+    66749
+   ],
+   "Recon": [
+    24,
+    8812
+   ],
+   "Spoofing": [
+    28,
+    12410
+   ],
+   "Web": [
+    0,
+    626
+   ]
+  },
+  "type": {
+   "Backdoor_Malware": [
+    0,
+    89
+   ],
+   "BrowserHijacking": [
+    0,
+    134
+   ],
+   "CommandInjection": [
+    0,
+    119
+   ],
+   "DDoS-ACK_Fragmentation": [
+    0,
+    7292
+   ],
+   "DDoS-HTTP_Flood": [
+    0,
+    709
+   ],
+   "DDoS-ICMP_Flood": [
+    0,
+    180447
+   ],
+   "DDoS-ICMP_Fragmentation": [
+    0,
+    11402
+   ],
+   "DDoS-PSHACK_Flood": [
+    0,
+    103326
+   ],
+   "DDoS-RSTFINFlood": [
+    0,
+    101819
+   ],
+   "DDoS-SYN_Flood": [
+    0,
+    102208
+   ],
+   "DDoS-SlowLoris": [
+    0,
+    622
+   ],
+   "DDoS-SynonymousIP_Flood": [
+    0,
+    90480
+   ],
+   "DDoS-TCP_Flood": [
+    0,
+    113735
+   ],
+   "DDoS-UDP_Flood": [
+    0,
+    136717
+   ],
+   "DDoS-UDP_Fragmentation": [
+    0,
+    7224
+   ],
+   "DNS_Spoofing": [
+    15,
+    4570
+   ],
+   "DictionaryBruteForce": [
+    0,
+    319
+   ],
+   "DoS-HTTP_Flood": [
+    0,
+    1805
+   ],
+   "DoS-SYN_Flood": [
+    0,
+    51116
+   ],
+   "DoS-TCP_Flood": [
+    0,
+    67697
+   ],
+   "DoS-UDP_Flood": [
+    0,
+    83627
+   ],
+   "MITM-ArpSpoofing": [
+    13,
+    7840
+   ],
+   "Mirai-greeth_flood": [
+    0,
+    24934
+   ],
+   "Mirai-greip_flood": [
+    0,
+    19279
+   ],
+   "Mirai-udpplain": [
+    0,
+    22536
+   ],
+   "Recon-HostDiscovery": [
+    2,
+    3331
+   ],
+   "Recon-OSScan": [
+    16,
+    2433
+   ],
+   "Recon-PingSweep": [
+    0,
+    53
+   ],
+   "Recon-PortScan": [
+    6,
+    2082
+   ],
+   "SqlInjection": [
+    0,
+    148
+   ],
+   "Uploading_Attack": [
+    0,
+    33
+   ],
+   "VulnerabilityScan": [
+    0,
+    913
+   ],
+   "XSS": [
+    0,
+    103
+   ]
+  }
+ },
+ "ciciot2023:ucb_typ": {
+  "family": {
+   "BruteForce": [
+    0,
+    319
+   ],
+   "DDoS": [
+    0,
+    855981
+   ],
+   "DoS": [
+    0,
+    204245
+   ],
+   "Mirai": [
+    0,
+    66749
+   ],
+   "Recon": [
+    24,
+    8812
+   ],
+   "Spoofing": [
+    28,
+    12410
+   ],
+   "Web": [
+    0,
+    626
+   ]
+  },
+  "type": {
+   "Backdoor_Malware": [
+    0,
+    89
+   ],
+   "BrowserHijacking": [
+    0,
+    134
+   ],
+   "CommandInjection": [
+    0,
+    119
+   ],
+   "DDoS-ACK_Fragmentation": [
+    0,
+    7292
+   ],
+   "DDoS-HTTP_Flood": [
+    0,
+    709
+   ],
+   "DDoS-ICMP_Flood": [
+    0,
+    180447
+   ],
+   "DDoS-ICMP_Fragmentation": [
+    0,
+    11402
+   ],
+   "DDoS-PSHACK_Flood": [
+    0,
+    103326
+   ],
+   "DDoS-RSTFINFlood": [
+    0,
+    101819
+   ],
+   "DDoS-SYN_Flood": [
+    0,
+    102208
+   ],
+   "DDoS-SlowLoris": [
+    0,
+    622
+   ],
+   "DDoS-SynonymousIP_Flood": [
+    0,
+    90480
+   ],
+   "DDoS-TCP_Flood": [
+    0,
+    113735
+   ],
+   "DDoS-UDP_Flood": [
+    0,
+    136717
+   ],
+   "DDoS-UDP_Fragmentation": [
+    0,
+    7224
+   ],
+   "DNS_Spoofing": [
+    15,
+    4570
+   ],
+   "DictionaryBruteForce": [
+    0,
+    319
+   ],
+   "DoS-HTTP_Flood": [
+    0,
+    1805
+   ],
+   "DoS-SYN_Flood": [
+    0,
+    51116
+   ],
+   "DoS-TCP_Flood": [
+    0,
+    67697
+   ],
+   "DoS-UDP_Flood": [
+    0,
+    83627
+   ],
+   "MITM-ArpSpoofing": [
+    13,
+    7840
+   ],
+   "Mirai-greeth_flood": [
+    0,
+    24934
+   ],
+   "Mirai-greip_flood": [
+    0,
+    19279
+   ],
+   "Mirai-udpplain": [
+    0,
+    22536
+   ],
+   "Recon-HostDiscovery": [
+    2,
+    3331
+   ],
+   "Recon-OSScan": [
+    16,
+    2433
+   ],
+   "Recon-PingSweep": [
+    0,
+    53
+   ],
+   "Recon-PortScan": [
+    6,
+    2082
+   ],
+   "SqlInjection": [
+    0,
+    148
+   ],
+   "Uploading_Attack": [
+    0,
+    33
+   ],
+   "VulnerabilityScan": [
+    0,
+    913
+   ],
+   "XSS": [
+    0,
+    103
+   ]
+  }
+ },
+ "ciciomt2024:point": {
+  "family": {
+   "DDoS": [
+    0,
+    1066764
+   ],
+   "DoS": [
+    0,
+    416676
+   ],
+   "MQTT": [
+    249,
+    63715
+   ],
+   "Recon": [
+    553,
+    27676
+   ],
+   "Spoofing": [
+    172,
+    1744
+   ]
+  },
+  "type": {
+   "ARP_Spoofing": [
+    172,
+    1744
+   ],
+   "MQTT-DDoS-Connect_Flood": [
+    1,
+    41916
+   ],
+   "MQTT-DDoS-Publish_Flood": [
+    0,
+    8416
+   ],
+   "MQTT-DoS-Connect_Flood": [
+    0,
+    3131
+   ],
+   "MQTT-DoS-Publish_Flood": [
+    0,
+    8505
+   ],
+   "MQTT-Malformed_Data": [
+    248,
+    1747
+   ],
+   "Recon-OS_Scan": [
+    215,
+    3834
+   ],
+   "Recon-Ping_Sweep": [
+    14,
+    186
+   ],
+   "Recon-Port_Scan": [
+    85,
+    22622
+   ],
+   "Recon-VulScan": [
+    239,
+    1034
+   ],
+   "TCP_IP-DDoS-ICMP": [
+    0,
+    349699
+   ],
+   "TCP_IP-DDoS-SYN": [
+    0,
+    172397
+   ],
+   "TCP_IP-DDoS-TCP": [
+    0,
+    182598
+   ],
+   "TCP_IP-DDoS-UDP": [
+    0,
+    362070
+   ],
+   "TCP_IP-DoS-ICMP": [
+    0,
+    98432
+   ],
+   "TCP_IP-DoS-SYN": [
+    0,
+    98595
+   ],
+   "TCP_IP-DoS-TCP": [
+    0,
+    82096
+   ],
+   "TCP_IP-DoS-UDP": [
+    0,
+    137553
+   ]
+  }
+ },
+ "ciciomt2024:ucb_fam": {
+  "family": {
+   "DDoS": [
+    0,
+    1066764
+   ],
+   "DoS": [
+    0,
+    416676
+   ],
+   "MQTT": [
+    207,
+    63715
+   ],
+   "Recon": [
+    463,
+    27676
+   ],
+   "Spoofing": [
+    147,
+    1744
+   ]
+  },
+  "type": {
+   "ARP_Spoofing": [
+    147,
+    1744
+   ],
+   "MQTT-DDoS-Connect_Flood": [
+    0,
+    41916
+   ],
+   "MQTT-DDoS-Publish_Flood": [
+    0,
+    8416
+   ],
+   "MQTT-DoS-Connect_Flood": [
+    0,
+    3131
+   ],
+   "MQTT-DoS-Publish_Flood": [
+    0,
+    8505
+   ],
+   "MQTT-Malformed_Data": [
+    207,
+    1747
+   ],
+   "Recon-OS_Scan": [
+    190,
+    3834
+   ],
+   "Recon-Ping_Sweep": [
+    13,
+    186
+   ],
+   "Recon-Port_Scan": [
+    48,
+    22622
+   ],
+   "Recon-VulScan": [
+    212,
+    1034
+   ],
+   "TCP_IP-DDoS-ICMP": [
+    0,
+    349699
+   ],
+   "TCP_IP-DDoS-SYN": [
+    0,
+    172397
+   ],
+   "TCP_IP-DDoS-TCP": [
+    0,
+    182598
+   ],
+   "TCP_IP-DDoS-UDP": [
+    0,
+    362070
+   ],
+   "TCP_IP-DoS-ICMP": [
+    0,
+    98432
+   ],
+   "TCP_IP-DoS-SYN": [
+    0,
+    98595
+   ],
+   "TCP_IP-DoS-TCP": [
+    0,
+    82096
+   ],
+   "TCP_IP-DoS-UDP": [
+    0,
+    137553
+   ]
+  }
+ },
+ "ciciomt2024:ucb_typ": {
+  "family": {
+   "DDoS": [
+    0,
+    1066764
+   ],
+   "DoS": [
+    0,
+    416676
+   ],
+   "MQTT": [
+    28,
+    63715
+   ],
+   "Recon": [
+    96,
+    27676
+   ],
+   "Spoofing": [
+    29,
+    1744
+   ]
+  },
+  "type": {
+   "ARP_Spoofing": [
+    29,
+    1744
+   ],
+   "MQTT-DDoS-Connect_Flood": [
+    0,
+    41916
+   ],
+   "MQTT-DDoS-Publish_Flood": [
+    0,
+    8416
+   ],
+   "MQTT-DoS-Connect_Flood": [
+    0,
+    3131
+   ],
+   "MQTT-DoS-Publish_Flood": [
+    0,
+    8505
+   ],
+   "MQTT-Malformed_Data": [
+    28,
+    1747
+   ],
+   "Recon-OS_Scan": [
+    25,
+    3834
+   ],
+   "Recon-Ping_Sweep": [
+    2,
+    186
+   ],
+   "Recon-Port_Scan": [
+    0,
+    22622
+   ],
+   "Recon-VulScan": [
+    69,
+    1034
+   ],
+   "TCP_IP-DDoS-ICMP": [
+    0,
+    349699
+   ],
+   "TCP_IP-DDoS-SYN": [
+    0,
+    172397
+   ],
+   "TCP_IP-DDoS-TCP": [
+    0,
+    182598
+   ],
+   "TCP_IP-DDoS-UDP": [
+    0,
+    362070
+   ],
+   "TCP_IP-DoS-ICMP": [
+    0,
+    98432
+   ],
+   "TCP_IP-DoS-SYN": [
+    0,
+    98595
+   ],
+   "TCP_IP-DoS-TCP": [
+    0,
+    82096
+   ],
+   "TCP_IP-DoS-UDP": [
+    0,
+    137553
+   ]
+  }
+ },
+ "iomt_recal5:point": {
+  "family": {
+   "DDoS": [
+    0,
+    1013424
+   ],
+   "DoS": [
+    0,
+    395841
+   ],
+   "MQTT": [
+    80,
+    60527
+   ],
+   "Recon": [
+    214,
+    26290
+   ],
+   "Spoofing": [
+    68,
+    1656
+   ]
+  },
+  "type": {
+   "ARP_Spoofing": [
+    68,
+    1656
+   ],
+   "MQTT-DDoS-Connect_Flood": [
+    0,
+    39820
+   ],
+   "MQTT-DDoS-Publish_Flood": [
+    0,
+    7995
+   ],
+   "MQTT-DoS-Connect_Flood": [
+    0,
+    2974
+   ],
+   "MQTT-DoS-Publish_Flood": [
+    0,
+    8079
+   ],
+   "MQTT-Malformed_Data": [
+    80,
+    1659
+   ],
+   "Recon-OS_Scan": [
+    85,
+    3642
+   ],
+   "Recon-Ping_Sweep": [
+    4,
+    176
+   ],
+   "Recon-Port_Scan": [
+    4,
+    21490
+   ],
+   "Recon-VulScan": [
+    121,
+    982
+   ],
+   "TCP_IP-DDoS-ICMP": [
+    0,
+    332213
+   ],
+   "TCP_IP-DDoS-SYN": [
+    0,
+    163777
+   ],
+   "TCP_IP-DDoS-TCP": [
+    0,
+    173468
+   ],
+   "TCP_IP-DDoS-UDP": [
+    0,
+    343966
+   ],
+   "TCP_IP-DoS-ICMP": [
+    0,
+    93510
+   ],
+   "TCP_IP-DoS-SYN": [
+    0,
+    93665
+   ],
+   "TCP_IP-DoS-TCP": [
+    0,
+    77991
+   ],
+   "TCP_IP-DoS-UDP": [
+    0,
+    130675
+   ]
+  }
+ },
+ "iomt_recal5:ucb_fam": {
+  "family": {
+   "DDoS": [
+    0,
+    1013424
+   ],
+   "DoS": [
+    0,
+    395841
+   ],
+   "MQTT": [
+    0,
+    60527
+   ],
+   "Recon": [
+    0,
+    26290
+   ],
+   "Spoofing": [
+    0,
+    1656
+   ]
+  },
+  "type": {
+   "ARP_Spoofing": [
+    0,
+    1656
+   ],
+   "MQTT-DDoS-Connect_Flood": [
+    0,
+    39820
+   ],
+   "MQTT-DDoS-Publish_Flood": [
+    0,
+    7995
+   ],
+   "MQTT-DoS-Connect_Flood": [
+    0,
+    2974
+   ],
+   "MQTT-DoS-Publish_Flood": [
+    0,
+    8079
+   ],
+   "MQTT-Malformed_Data": [
+    0,
+    1659
+   ],
+   "Recon-OS_Scan": [
+    0,
+    3642
+   ],
+   "Recon-Ping_Sweep": [
+    0,
+    176
+   ],
+   "Recon-Port_Scan": [
+    0,
+    21490
+   ],
+   "Recon-VulScan": [
+    0,
+    982
+   ],
+   "TCP_IP-DDoS-ICMP": [
+    0,
+    332213
+   ],
+   "TCP_IP-DDoS-SYN": [
+    0,
+    163777
+   ],
+   "TCP_IP-DDoS-TCP": [
+    0,
+    173468
+   ],
+   "TCP_IP-DDoS-UDP": [
+    0,
+    343966
+   ],
+   "TCP_IP-DoS-ICMP": [
+    0,
+    93510
+   ],
+   "TCP_IP-DoS-SYN": [
+    0,
+    93665
+   ],
+   "TCP_IP-DoS-TCP": [
+    0,
+    77991
+   ],
+   "TCP_IP-DoS-UDP": [
+    0,
+    130675
+   ]
+  }
+ },
+ "iomt_recal5:ucb_typ": {
+  "family": {
+   "DDoS": [
+    0,
+    1013424
+   ],
+   "DoS": [
+    0,
+    395841
+   ],
+   "MQTT": [
+    0,
+    60527
+   ],
+   "Recon": [
+    0,
+    26290
+   ],
+   "Spoofing": [
+    0,
+    1656
+   ]
+  },
+  "type": {
+   "ARP_Spoofing": [
+    0,
+    1656
+   ],
+   "MQTT-DDoS-Connect_Flood": [
+    0,
+    39820
+   ],
+   "MQTT-DDoS-Publish_Flood": [
+    0,
+    7995
+   ],
+   "MQTT-DoS-Connect_Flood": [
+    0,
+    2974
+   ],
+   "MQTT-DoS-Publish_Flood": [
+    0,
+    8079
+   ],
+   "MQTT-Malformed_Data": [
+    0,
+    1659
+   ],
+   "Recon-OS_Scan": [
+    0,
+    3642
+   ],
+   "Recon-Ping_Sweep": [
+    0,
+    176
+   ],
+   "Recon-Port_Scan": [
+    0,
+    21490
+   ],
+   "Recon-VulScan": [
+    0,
+    982
+   ],
+   "TCP_IP-DDoS-ICMP": [
+    0,
+    332213
+   ],
+   "TCP_IP-DDoS-SYN": [
+    0,
+    163777
+   ],
+   "TCP_IP-DDoS-TCP": [
+    0,
+    173468
+   ],
+   "TCP_IP-DDoS-UDP": [
+    0,
+    343966
+   ],
+   "TCP_IP-DoS-ICMP": [
+    0,
+    93510
+   ],
+   "TCP_IP-DoS-SYN": [
+    0,
+    93665
+   ],
+   "TCP_IP-DoS-TCP": [
+    0,
+    77991
+   ],
+   "TCP_IP-DoS-UDP": [
+    0,
+    130675
+   ]
+  }
+ },
+ "iomt_recal10:point": {
+  "family": {
+   "DDoS": [
+    0,
+    960085
+   ],
+   "DoS": [
+    0,
+    375006
+   ],
+   "MQTT": [
+    144,
+    57341
+   ],
+   "Recon": [
+    330,
+    24906
+   ],
+   "Spoofing": [
+    115,
+    1569
+   ]
+  },
+  "type": {
+   "ARP_Spoofing": [
+    115,
+    1569
+   ],
+   "MQTT-DDoS-Connect_Flood": [
+    0,
+    37724
+   ],
+   "MQTT-DDoS-Publish_Flood": [
+    0,
+    7574
+   ],
+   "MQTT-DoS-Connect_Flood": [
+    0,
+    2817
+   ],
+   "MQTT-DoS-Publish_Flood": [
+    0,
+    7654
+   ],
+   "MQTT-Malformed_Data": [
+    144,
+    1572
+   ],
+   "Recon-OS_Scan": [
+    149,
+    3450
+   ],
+   "Recon-Ping_Sweep": [
+    6,
+    167
+   ],
+   "Recon-Port_Scan": [
+    26,
+    20359
+   ],
+   "Recon-VulScan": [
+    149,
+    930
+   ],
+   "TCP_IP-DDoS-ICMP": [
+    0,
+    314728
+   ],
+   "TCP_IP-DDoS-SYN": [
+    0,
+    155157
+   ],
+   "TCP_IP-DDoS-TCP": [
+    0,
+    164338
+   ],
+   "TCP_IP-DDoS-UDP": [
+    0,
+    325862
+   ],
+   "TCP_IP-DoS-ICMP": [
+    0,
+    88588
+   ],
+   "TCP_IP-DoS-SYN": [
+    0,
+    88735
+   ],
+   "TCP_IP-DoS-TCP": [
+    0,
+    73886
+   ],
+   "TCP_IP-DoS-UDP": [
+    0,
+    123797
+   ]
+  }
+ },
+ "iomt_recal10:ucb_fam": {
+  "family": {
+   "DDoS": [
+    0,
+    960085
+   ],
+   "DoS": [
+    0,
+    375006
+   ],
+   "MQTT": [
+    0,
+    57341
+   ],
+   "Recon": [
+    0,
+    24906
+   ],
+   "Spoofing": [
+    0,
+    1569
+   ]
+  },
+  "type": {
+   "ARP_Spoofing": [
+    0,
+    1569
+   ],
+   "MQTT-DDoS-Connect_Flood": [
+    0,
+    37724
+   ],
+   "MQTT-DDoS-Publish_Flood": [
+    0,
+    7574
+   ],
+   "MQTT-DoS-Connect_Flood": [
+    0,
+    2817
+   ],
+   "MQTT-DoS-Publish_Flood": [
+    0,
+    7654
+   ],
+   "MQTT-Malformed_Data": [
+    0,
+    1572
+   ],
+   "Recon-OS_Scan": [
+    0,
+    3450
+   ],
+   "Recon-Ping_Sweep": [
+    0,
+    167
+   ],
+   "Recon-Port_Scan": [
+    0,
+    20359
+   ],
+   "Recon-VulScan": [
+    0,
+    930
+   ],
+   "TCP_IP-DDoS-ICMP": [
+    0,
+    314728
+   ],
+   "TCP_IP-DDoS-SYN": [
+    0,
+    155157
+   ],
+   "TCP_IP-DDoS-TCP": [
+    0,
+    164338
+   ],
+   "TCP_IP-DDoS-UDP": [
+    0,
+    325862
+   ],
+   "TCP_IP-DoS-ICMP": [
+    0,
+    88588
+   ],
+   "TCP_IP-DoS-SYN": [
+    0,
+    88735
+   ],
+   "TCP_IP-DoS-TCP": [
+    0,
+    73886
+   ],
+   "TCP_IP-DoS-UDP": [
+    0,
+    123797
+   ]
+  }
+ },
+ "iomt_recal10:ucb_typ": {
+  "family": {
+   "DDoS": [
+    0,
+    960085
+   ],
+   "DoS": [
+    0,
+    375006
+   ],
+   "MQTT": [
+    0,
+    57341
+   ],
+   "Recon": [
+    0,
+    24906
+   ],
+   "Spoofing": [
+    0,
+    1569
+   ]
+  },
+  "type": {
+   "ARP_Spoofing": [
+    0,
+    1569
+   ],
+   "MQTT-DDoS-Connect_Flood": [
+    0,
+    37724
+   ],
+   "MQTT-DDoS-Publish_Flood": [
+    0,
+    7574
+   ],
+   "MQTT-DoS-Connect_Flood": [
+    0,
+    2817
+   ],
+   "MQTT-DoS-Publish_Flood": [
+    0,
+    7654
+   ],
+   "MQTT-Malformed_Data": [
+    0,
+    1572
+   ],
+   "Recon-OS_Scan": [
+    0,
+    3450
+   ],
+   "Recon-Ping_Sweep": [
+    0,
+    167
+   ],
+   "Recon-Port_Scan": [
+    0,
+    20359
+   ],
+   "Recon-VulScan": [
+    0,
+    930
+   ],
+   "TCP_IP-DDoS-ICMP": [
+    0,
+    314728
+   ],
+   "TCP_IP-DDoS-SYN": [
+    0,
+    155157
+   ],
+   "TCP_IP-DDoS-TCP": [
+    0,
+    164338
+   ],
+   "TCP_IP-DDoS-UDP": [
+    0,
+    325862
+   ],
+   "TCP_IP-DoS-ICMP": [
+    0,
+    88588
+   ],
+   "TCP_IP-DoS-SYN": [
+    0,
+    88735
+   ],
+   "TCP_IP-DoS-TCP": [
+    0,
+    73886
+   ],
+   "TCP_IP-DoS-UDP": [
+    0,
+    123797
+   ]
+  }
+ },
+ "iomt_recal20:point": {
+  "family": {
+   "DDoS": [
+    0,
+    853408
+   ],
+   "DoS": [
+    0,
+    333339
+   ],
+   "MQTT": [
+    184,
+    50969
+   ],
+   "Recon": [
+    357,
+    22139
+   ],
+   "Spoofing": [
+    134,
+    1395
+   ]
+  },
+  "type": {
+   "ARP_Spoofing": [
+    134,
+    1395
+   ],
+   "MQTT-DDoS-Connect_Flood": [
+    0,
+    33532
+   ],
+   "MQTT-DDoS-Publish_Flood": [
+    0,
+    6732
+   ],
+   "MQTT-DoS-Connect_Flood": [
+    0,
+    2504
+   ],
+   "MQTT-DoS-Publish_Flood": [
+    0,
+    6804
+   ],
+   "MQTT-Malformed_Data": [
+    184,
+    1397
+   ],
+   "Recon-OS_Scan": [
+    168,
+    3067
+   ],
+   "Recon-Ping_Sweep": [
+    10,
+    148
+   ],
+   "Recon-Port_Scan": [
+    45,
+    18097
+   ],
+   "Recon-VulScan": [
+    134,
+    827
+   ],
+   "TCP_IP-DDoS-ICMP": [
+    0,
+    279758
+   ],
+   "TCP_IP-DDoS-SYN": [
+    0,
+    137917
+   ],
+   "TCP_IP-DDoS-TCP": [
+    0,
+    146078
+   ],
+   "TCP_IP-DDoS-UDP": [
+    0,
+    289655
+   ],
+   "TCP_IP-DoS-ICMP": [
+    0,
+    78745
+   ],
+   "TCP_IP-DoS-SYN": [
+    0,
+    78876
+   ],
+   "TCP_IP-DoS-TCP": [
+    0,
+    65676
+   ],
+   "TCP_IP-DoS-UDP": [
+    0,
+    110042
+   ]
+  }
+ },
+ "iomt_recal20:ucb_fam": {
+  "family": {
+   "DDoS": [
+    0,
+    853408
+   ],
+   "DoS": [
+    0,
+    333339
+   ],
+   "MQTT": [
+    78,
+    50969
+   ],
+   "Recon": [
+    179,
+    22139
+   ],
+   "Spoofing": [
+    68,
+    1395
+   ]
+  },
+  "type": {
+   "ARP_Spoofing": [
+    68,
+    1395
+   ],
+   "MQTT-DDoS-Connect_Flood": [
+    0,
+    33532
+   ],
+   "MQTT-DDoS-Publish_Flood": [
+    0,
+    6732
+   ],
+   "MQTT-DoS-Connect_Flood": [
+    0,
+    2504
+   ],
+   "MQTT-DoS-Publish_Flood": [
+    0,
+    6804
+   ],
+   "MQTT-Malformed_Data": [
+    78,
+    1397
+   ],
+   "Recon-OS_Scan": [
+    76,
+    3067
+   ],
+   "Recon-Ping_Sweep": [
+    4,
+    148
+   ],
+   "Recon-Port_Scan": [
+    4,
+    18097
+   ],
+   "Recon-VulScan": [
+    95,
+    827
+   ],
+   "TCP_IP-DDoS-ICMP": [
+    0,
+    279758
+   ],
+   "TCP_IP-DDoS-SYN": [
+    0,
+    137917
+   ],
+   "TCP_IP-DDoS-TCP": [
+    0,
+    146078
+   ],
+   "TCP_IP-DDoS-UDP": [
+    0,
+    289655
+   ],
+   "TCP_IP-DoS-ICMP": [
+    0,
+    78745
+   ],
+   "TCP_IP-DoS-SYN": [
+    0,
+    78876
+   ],
+   "TCP_IP-DoS-TCP": [
+    0,
+    65676
+   ],
+   "TCP_IP-DoS-UDP": [
+    0,
+    110042
+   ]
+  }
+ },
+ "iomt_recal20:ucb_typ": {
+  "family": {
+   "DDoS": [
+    0,
+    853408
+   ],
+   "DoS": [
+    0,
+    333339
+   ],
+   "MQTT": [
+    2,
+    50969
+   ],
+   "Recon": [
+    6,
+    22139
+   ],
+   "Spoofing": [
+    2,
+    1395
+   ]
+  },
+  "type": {
+   "ARP_Spoofing": [
+    2,
+    1395
+   ],
+   "MQTT-DDoS-Connect_Flood": [
+    0,
+    33532
+   ],
+   "MQTT-DDoS-Publish_Flood": [
+    0,
+    6732
+   ],
+   "MQTT-DoS-Connect_Flood": [
+    0,
+    2504
+   ],
+   "MQTT-DoS-Publish_Flood": [
+    0,
+    6804
+   ],
+   "MQTT-Malformed_Data": [
+    2,
+    1397
+   ],
+   "Recon-OS_Scan": [
+    1,
+    3067
+   ],
+   "Recon-Ping_Sweep": [
+    0,
+    148
+   ],
+   "Recon-Port_Scan": [
+    0,
+    18097
+   ],
+   "Recon-VulScan": [
+    5,
+    827
+   ],
+   "TCP_IP-DDoS-ICMP": [
+    0,
+    279758
+   ],
+   "TCP_IP-DDoS-SYN": [
+    0,
+    137917
+   ],
+   "TCP_IP-DDoS-TCP": [
+    0,
+    146078
+   ],
+   "TCP_IP-DDoS-UDP": [
+    0,
+    289655
+   ],
+   "TCP_IP-DoS-ICMP": [
+    0,
+    78745
+   ],
+   "TCP_IP-DoS-SYN": [
+    0,
+    78876
+   ],
+   "TCP_IP-DoS-TCP": [
+    0,
+    65676
+   ],
+   "TCP_IP-DoS-UDP": [
+    0,
+    110042
+   ]
+  }
+ }
+}

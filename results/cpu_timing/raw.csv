@@ -1,0 +1,163 @@
+wall_ms,cpu_ms,summed_ms,dataset,mix,threads,design,repeat
+17366.6,17346.7,17006.2,ciciot2023,benign90,1 thread,single-stage,0
+5793.6,5781.23,5676.47,ciciot2023,benign90,1 thread,"two-stage, efficiency",0
+8352.85,8336.93,8181.12,ciciot2023,benign90,1 thread,"two-stage, certified",0
+17706.2,17660.7,17336.8,ciciot2023,benign90,1 thread,single-stage,1
+6138.53,5975.64,6022.25,ciciot2023,benign90,1 thread,"two-stage, efficiency",1
+8347.29,8336.6,8174.46,ciciot2023,benign90,1 thread,"two-stage, certified",1
+17584.5,17539.0,17229.1,ciciot2023,benign90,1 thread,single-stage,2
+5789.77,5765.47,5671.8,ciciot2023,benign90,1 thread,"two-stage, efficiency",2
+8422.02,8402.27,8253.23,ciciot2023,benign90,1 thread,"two-stage, certified",2
+4979.07,21055.3,4884.62,ciciot2023,benign90,all cores,single-stage,0
+2427.42,9060.14,2376.69,ciciot2023,benign90,all cores,"two-stage, efficiency",0
+3161.94,12156.9,3097.3,ciciot2023,benign90,all cores,"two-stage, certified",0
+4919.31,20924.5,4823.87,ciciot2023,benign90,all cores,single-stage,1
+2579.78,9492.53,2526.78,ciciot2023,benign90,all cores,"two-stage, efficiency",1
+3288.65,12665.3,3221.43,ciciot2023,benign90,all cores,"two-stage, certified",1
+5137.68,21843.1,5041.23,ciciot2023,benign90,all cores,single-stage,2
+2495.43,9280.6,2439.45,ciciot2023,benign90,all cores,"two-stage, efficiency",2
+3280.95,12624.0,3213.38,ciciot2023,benign90,all cores,"two-stage, certified",2
+5074.92,21720.0,4973.82,ciciot2023,benign90,hybrid,single-stage,0
+1763.05,6877.49,1725.93,ciciot2023,benign90,hybrid,"two-stage, efficiency",0
+2614.95,10316.4,2565.36,ciciot2023,benign90,hybrid,"two-stage, certified",0
+5809.35,24118.4,5698.52,ciciot2023,benign90,hybrid,single-stage,1
+1776.58,7159.3,1738.98,ciciot2023,benign90,hybrid,"two-stage, efficiency",1
+2781.64,11129.3,2722.58,ciciot2023,benign90,hybrid,"two-stage, certified",1
+5340.74,22704.5,5234.01,ciciot2023,benign90,hybrid,single-stage,2
+1818.89,7073.24,1781.91,ciciot2023,benign90,hybrid,"two-stage, efficiency",2
+2786.45,10681.4,2735.61,ciciot2023,benign90,hybrid,"two-stage, certified",2
+18001.0,17972.7,17603.9,ciciot2023,benign75,1 thread,single-stage,0
+7798.64,7786.72,7624.83,ciciot2023,benign75,1 thread,"two-stage, efficiency",0
+9789.41,9771.82,9579.28,ciciot2023,benign75,1 thread,"two-stage, certified",0
+17780.6,17749.5,17423.0,ciciot2023,benign75,1 thread,single-stage,1
+7626.39,7618.22,7453.28,ciciot2023,benign75,1 thread,"two-stage, efficiency",1
+9660.27,9650.65,9455.97,ciciot2023,benign75,1 thread,"two-stage, certified",1
+17460.4,17445.4,17105.7,ciciot2023,benign75,1 thread,single-stage,2
+7585.76,7579.77,7415.31,ciciot2023,benign75,1 thread,"two-stage, efficiency",2
+9653.2,9646.36,9455.84,ciciot2023,benign75,1 thread,"two-stage, certified",2
+5017.58,21114.1,4923.99,ciciot2023,benign75,all cores,single-stage,0
+3131.82,11854.7,3064.49,ciciot2023,benign75,all cores,"two-stage, efficiency",0
+3701.02,14259.7,3626.83,ciciot2023,benign75,all cores,"two-stage, certified",0
+5132.23,21571.3,5034.42,ciciot2023,benign75,all cores,single-stage,1
+3148.84,11921.1,3082.54,ciciot2023,benign75,all cores,"two-stage, efficiency",1
+3812.78,14565.1,3736.39,ciciot2023,benign75,all cores,"two-stage, certified",1
+5298.3,22124.9,5196.62,ciciot2023,benign75,all cores,single-stage,2
+3259.21,12228.1,3189.82,ciciot2023,benign75,all cores,"two-stage, efficiency",2
+3950.93,15040.3,3872.33,ciciot2023,benign75,all cores,"two-stage, certified",2
+5539.23,22991.7,5432.66,ciciot2023,benign75,hybrid,single-stage,0
+2563.15,9808.56,2507.69,ciciot2023,benign75,hybrid,"two-stage, efficiency",0
+3269.98,12702.8,3204.42,ciciot2023,benign75,hybrid,"two-stage, certified",0
+5796.9,23893.1,5686.09,ciciot2023,benign75,hybrid,single-stage,1
+2742.29,10474.0,2683.33,ciciot2023,benign75,hybrid,"two-stage, efficiency",1
+3510.86,13530.7,3442.58,ciciot2023,benign75,hybrid,"two-stage, certified",1
+6128.32,24738.3,6011.1,ciciot2023,benign75,hybrid,single-stage,2
+2852.86,10865.9,2791.87,ciciot2023,benign75,hybrid,"two-stage, efficiency",2
+3607.28,13763.2,3537.11,ciciot2023,benign75,hybrid,"two-stage, certified",2
+18197.3,18183.6,17769.8,ciciot2023,natural,1 thread,single-stage,0
+18157.3,18142.6,17800.5,ciciot2023,natural,1 thread,"two-stage, efficiency",0
+18243.9,18229.3,17882.0,ciciot2023,natural,1 thread,"two-stage, certified",0
+18257.1,18243.1,17881.1,ciciot2023,natural,1 thread,single-stage,1
+18323.3,18309.0,17968.3,ciciot2023,natural,1 thread,"two-stage, efficiency",1
+18476.4,18464.2,18110.0,ciciot2023,natural,1 thread,"two-stage, certified",1
+18163.3,18148.3,17793.1,ciciot2023,natural,1 thread,single-stage,2
+18153.9,18139.1,17795.2,ciciot2023,natural,1 thread,"two-stage, efficiency",2
+18234.7,18221.6,17865.6,ciciot2023,natural,1 thread,"two-stage, certified",2
+6494.68,26867.8,6399.55,ciciot2023,natural,all cores,single-stage,0
+7475.84,29684.2,7328.68,ciciot2023,natural,all cores,"two-stage, efficiency",0
+7534.03,29970.8,7385.23,ciciot2023,natural,all cores,"two-stage, certified",0
+6444.56,26972.8,6313.31,ciciot2023,natural,all cores,single-stage,1
+7519.39,30015.3,7369.28,ciciot2023,natural,all cores,"two-stage, efficiency",1
+7576.82,30250.9,7426.51,ciciot2023,natural,all cores,"two-stage, certified",1
+6995.65,29199.1,6864.27,ciciot2023,natural,all cores,single-stage,2
+7852.98,31378.0,7704.07,ciciot2023,natural,all cores,"two-stage, efficiency",2
+7746.85,30940.8,7593.18,ciciot2023,natural,all cores,"two-stage, certified",2
+6654.44,27638.7,6524.19,ciciot2023,natural,hybrid,single-stage,0
+6692.27,26942.8,6559.76,ciciot2023,natural,hybrid,"two-stage, efficiency",0
+6762.49,27338.8,6628.2,ciciot2023,natural,hybrid,"two-stage, certified",0
+6567.15,27056.6,6435.91,ciciot2023,natural,hybrid,single-stage,1
+6663.08,26861.2,6531.71,ciciot2023,natural,hybrid,"two-stage, efficiency",1
+6730.3,27057.5,6598.88,ciciot2023,natural,hybrid,"two-stage, certified",1
+6633.17,27360.7,6501.83,ciciot2023,natural,hybrid,single-stage,2
+6796.04,27302.5,6664.59,ciciot2023,natural,hybrid,"two-stage, efficiency",2
+6769.46,27124.3,6636.49,ciciot2023,natural,hybrid,"two-stage, certified",2
+18873.9,18854.5,18392.7,ciciomt2024,benign90,1 thread,single-stage,0
+2857.1,2853.86,2803.25,ciciomt2024,benign90,1 thread,"two-stage, efficiency",0
+3901.93,3898.22,3835.97,ciciomt2024,benign90,1 thread,"two-stage, certified",0
+18742.0,18724.9,18358.6,ciciomt2024,benign90,1 thread,single-stage,1
+2820.48,2817.24,2768.81,ciciomt2024,benign90,1 thread,"two-stage, efficiency",1
+3897.27,3893.32,3831.62,ciciomt2024,benign90,1 thread,"two-stage, certified",1
+18950.2,18931.9,18564.8,ciciomt2024,benign90,1 thread,single-stage,2
+2842.62,2839.45,2790.68,ciciomt2024,benign90,1 thread,"two-stage, efficiency",2
+3928.43,3925.08,3863.94,ciciomt2024,benign90,1 thread,"two-stage, certified",2
+7064.06,25486.8,6963.05,ciciomt2024,benign90,all cores,single-stage,0
+2164.23,6871.23,2121.41,ciciomt2024,benign90,all cores,"two-stage, efficiency",0
+2560.07,8313.85,2513.07,ciciomt2024,benign90,all cores,"two-stage, certified",0
+7103.62,25274.4,6972.12,ciciomt2024,benign90,all cores,single-stage,1
+2155.27,6839.08,2109.61,ciciomt2024,benign90,all cores,"two-stage, efficiency",1
+2560.24,8270.84,2513.18,ciciomt2024,benign90,all cores,"two-stage, certified",1
+7111.47,25990.9,6982.04,ciciomt2024,benign90,all cores,single-stage,2
+2205.3,6949.02,2158.37,ciciomt2024,benign90,all cores,"two-stage, efficiency",2
+2592.82,8388.5,2545.78,ciciomt2024,benign90,all cores,"two-stage, certified",2
+7171.48,26206.7,7039.34,ciciomt2024,benign90,hybrid,single-stage,0
+1213.81,3713.74,1187.73,ciciomt2024,benign90,hybrid,"two-stage, efficiency",0
+1633.34,5192.17,1605.83,ciciomt2024,benign90,hybrid,"two-stage, certified",0
+7076.6,25464.6,6945.53,ciciomt2024,benign90,hybrid,single-stage,1
+1210.14,3697.8,1184.0,ciciomt2024,benign90,hybrid,"two-stage, efficiency",1
+1599.32,5045.61,1572.21,ciciomt2024,benign90,hybrid,"two-stage, certified",1
+7146.37,25949.1,7017.52,ciciomt2024,benign90,hybrid,single-stage,2
+1195.64,3665.85,1169.95,ciciomt2024,benign90,hybrid,"two-stage, efficiency",2
+1578.62,5012.99,1549.84,ciciomt2024,benign90,hybrid,"two-stage, certified",2
+19219.3,19203.8,18765.2,ciciomt2024,benign75,1 thread,single-stage,0
+5746.82,5741.93,5619.79,ciciomt2024,benign75,1 thread,"two-stage, efficiency",0
+6610.9,6605.65,6464.91,ciciomt2024,benign75,1 thread,"two-stage, certified",0
+19627.6,19601.8,19232.7,ciciomt2024,benign75,1 thread,single-stage,1
+5863.53,5851.09,5722.32,ciciomt2024,benign75,1 thread,"two-stage, efficiency",1
+7251.91,7215.16,7107.39,ciciomt2024,benign75,1 thread,"two-stage, certified",1
+19900.2,19857.9,19511.9,ciciomt2024,benign75,1 thread,single-stage,2
+5860.93,5854.15,5733.25,ciciomt2024,benign75,1 thread,"two-stage, efficiency",2
+6812.48,6803.95,6662.34,ciciomt2024,benign75,1 thread,"two-stage, certified",2
+7903.17,29271.0,7789.97,ciciomt2024,benign75,all cores,single-stage,0
+3264.67,10907.6,3194.8,ciciomt2024,benign75,all cores,"two-stage, efficiency",0
+3999.59,13884.7,3927.3,ciciomt2024,benign75,all cores,"two-stage, certified",0
+9380.61,35103.6,9230.61,ciciomt2024,benign75,all cores,single-stage,1
+4221.88,14400.1,4132.55,ciciomt2024,benign75,all cores,"two-stage, efficiency",1
+4683.28,15867.3,4582.7,ciciomt2024,benign75,all cores,"two-stage, certified",1
+8030.27,29767.3,7833.55,ciciomt2024,benign75,all cores,single-stage,2
+3356.58,11236.9,3282.56,ciciomt2024,benign75,all cores,"two-stage, efficiency",2
+3657.46,12276.3,3577.52,ciciomt2024,benign75,all cores,"two-stage, certified",2
+7221.24,26318.5,7076.52,ciciomt2024,benign75,hybrid,single-stage,0
+2326.7,7556.18,2274.95,ciciomt2024,benign75,hybrid,"two-stage, efficiency",0
+2728.69,9232.87,2674.65,ciciomt2024,benign75,hybrid,"two-stage, certified",0
+7184.2,26463.0,7040.61,ciciomt2024,benign75,hybrid,single-stage,1
+2341.4,7629.7,2289.02,ciciomt2024,benign75,hybrid,"two-stage, efficiency",1
+2650.9,8729.72,2596.66,ciciomt2024,benign75,hybrid,"two-stage, certified",1
+7188.8,26381.6,7046.88,ciciomt2024,benign75,hybrid,single-stage,2
+2308.88,7570.44,2254.13,ciciomt2024,benign75,hybrid,"two-stage, efficiency",2
+2655.09,8727.99,2600.53,ciciomt2024,benign75,hybrid,"two-stage, certified",2
+19279.7,19258.1,18805.6,ciciomt2024,natural,1 thread,single-stage,0
+18964.3,18954.1,18567.9,ciciomt2024,natural,1 thread,"two-stage, efficiency",0
+19264.0,19256.6,18868.5,ciciomt2024,natural,1 thread,"two-stage, certified",0
+18823.3,18803.8,18431.2,ciciomt2024,natural,1 thread,single-stage,1
+19640.7,19605.5,19252.8,ciciomt2024,natural,1 thread,"two-stage, efficiency",1
+19432.5,19409.6,19015.0,ciciomt2024,natural,1 thread,"two-stage, certified",1
+19167.5,19147.2,18770.7,ciciomt2024,natural,1 thread,single-stage,2
+19405.2,19382.9,19002.3,ciciomt2024,natural,1 thread,"two-stage, efficiency",2
+18910.9,18889.1,18510.8,ciciomt2024,natural,1 thread,"two-stage, certified",2
+7314.61,27436.8,7214.58,ciciomt2024,natural,all cores,single-stage,0
+8194.79,29910.5,8024.15,ciciomt2024,natural,all cores,"two-stage, efficiency",0
+8863.22,32523.3,8693.74,ciciomt2024,natural,all cores,"two-stage, certified",0
+7265.12,27363.5,7124.03,ciciomt2024,natural,all cores,single-stage,1
+8670.44,31556.1,8502.99,ciciomt2024,natural,all cores,"two-stage, efficiency",1
+8876.66,32320.2,8708.1,ciciomt2024,natural,all cores,"two-stage, certified",1
+7847.54,29745.7,7706.8,ciciomt2024,natural,all cores,single-stage,2
+8568.17,31200.5,8355.65,ciciomt2024,natural,all cores,"two-stage, efficiency",2
+8734.0,31743.5,8562.84,ciciomt2024,natural,all cores,"two-stage, certified",2
+7009.26,26324.8,6869.51,ciciomt2024,natural,hybrid,single-stage,0
+7339.95,25704.9,7187.67,ciciomt2024,natural,hybrid,"two-stage, efficiency",0
+7160.04,25561.0,7012.9,ciciomt2024,natural,hybrid,"two-stage, certified",0
+6869.93,25921.2,6730.91,ciciomt2024,natural,hybrid,single-stage,1
+7103.46,25577.8,6954.48,ciciomt2024,natural,hybrid,"two-stage, efficiency",1
+7149.69,25777.6,7000.73,ciciomt2024,natural,hybrid,"two-stage, certified",1
+7849.0,29708.8,7706.49,ciciomt2024,natural,hybrid,single-stage,2
+7209.42,26247.5,7060.8,ciciomt2024,natural,hybrid,"two-stage, efficiency",2
+7354.1,26874.6,7204.89,ciciomt2024,natural,hybrid,"two-stage, certified",2

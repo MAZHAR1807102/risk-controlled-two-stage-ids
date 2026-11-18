@@ -1,0 +1,12 @@
+setting,tau,benign_bypass,worst_family,worst_family_miss,worst_family_miss_ci95_high,worst_type,worst_type_miss,worst_type_missed_n,overall_miss,D,feasible
+ciciot2023: validation -> test,0.01660624744548866,0.6119672308636184,Recon,0.0027235587834770767,0.0038281571837501535,Recon-OSScan,0.006576243321002877,16/2433,4.525115259906957e-05,1.0,True
+ciciot2023: validation -> test,,0.0,BruteForce,0.0,0.009347052435473017,Backdoor_Malware,0.0,0/89,0.0,1.5,False
+ciciot2023: validation -> test,,0.0,BruteForce,0.0,0.009347052435473017,Backdoor_Malware,0.0,0/89,0.0,2.0,False
+ciciot2023: validation -> test,,0.0,BruteForce,0.0,0.009347052435473017,Backdoor_Malware,0.0,0/89,0.0,4.0,False
+ciciot2023: validation -> test,,0.0,BruteForce,0.0,0.009347052435473017,Backdoor_Malware,0.0,0/89,0.0,8.0,False
+ciciomt2024: first 20% of test captures -> rest,0.011494497248624313,0.8414159880339039,Spoofing,0.0014336917562724014,0.004506169842388102,Recon-VulScan,0.006045949214026602,5/827,7.928642220019822e-06,1.0,True
+ciciomt2024: first 20% of test captures -> rest,,0.0,DDoS,0.0,3.5103104442139862e-06,ARP_Spoofing,0.0,0/1395,0.0,1.5,False
+ciciomt2024: first 20% of test captures -> rest,,0.0,DDoS,0.0,3.5103104442139862e-06,ARP_Spoofing,0.0,0/1395,0.0,2.0,False
+ciciomt2024: first 20% of test captures -> rest,,0.0,DDoS,0.0,3.5103104442139862e-06,ARP_Spoofing,0.0,0/1395,0.0,4.0,False
+ciciomt2024: first 20% of test captures -> rest,,0.0,DDoS,0.0,3.5103104442139862e-06,ARP_Spoofing,0.0,0/1395,0.0,8.0,False
+ciciomt2024: first 20% of test captures -> rest,,0.0,DDoS,0.0,3.5103104442139862e-06,ARP_Spoofing,0.0,0/1395,0.0,measured,False

@@ -1,0 +1,19 @@
+     mix    model         mode threads     api  total_cpu_ms  measured_saving   p50_us   p95_us    p99_us  stage1_mean_us  stage2_mean_us  benign_bypass  attacks_missed  attacks  accuracy
+benign75      new single-stage       0 inplace     17806.006            0.000  828.125 1245.221  2552.005             NaN         899.250          0.000               0     4941     0.964
+benign75      new    two-stage       0 inplace     10487.408            0.411  192.459 1225.267  1543.213         167.642         853.967          0.767               3     4941     0.966
+benign75      new single-stage       1 inplace     42757.534            0.000 2142.250 2332.921  2434.295             NaN        2159.447          0.000               0     4941     0.964
+benign75      new    two-stage       1 inplace     18491.229            0.568   29.458 2230.127  2274.583          25.726        2142.430          0.767               3     4941     0.966
+benign90      new single-stage       0 inplace     14483.065            0.000  723.167  834.589   918.627             NaN         731.435          0.000               0     1981     0.957
+benign90      new    two-stage       0 inplace      6981.118            0.518  148.625  895.752  1021.760         143.516         681.639          0.770               2     1981     0.961
+benign90      new single-stage       1 inplace     38802.864            0.000 1950.916 2053.585  2098.377             NaN        1959.719          0.000               0     1981     0.957
+benign90      new    two-stage       1 inplace     12360.226            0.681   24.688 2036.633  2102.213          22.597        1961.858          0.770               2     1981     0.961
+ natural      new single-stage       0 inplace     15505.485            0.000  776.542  912.754  1036.169             NaN         783.068          0.000               0    19330     0.995
+ natural      new    two-stage       0 inplace     17524.436           -0.130  878.125 1078.624  1247.541         156.636         741.889          0.751               7    19330     0.995
+ natural      new single-stage       1 inplace     40330.268            0.000 2024.917 2151.256  2260.004             NaN        2036.858          0.000               0    19330     0.995
+ natural      new    two-stage       1 inplace     39866.806            0.011 2043.334 2160.084  2227.004          29.664        2020.527          0.751               7    19330     0.995
+
+Gatekeeper miss rate by attack group (two-stage runs):
+     mix    model threads  miss_BruteForce  miss_DDoS  miss_DoS  miss_Mirai  miss_Recon  miss_Spoofing  miss_Web
+benign75      new       0            0.020      0.000     0.000       0.000       0.010          0.000     0.000
+benign90      new       0            0.000      0.000     0.000       0.000       0.020          0.000     0.000
+ natural      new       0            0.000      0.000     0.000       0.000       0.017          0.019     0.000

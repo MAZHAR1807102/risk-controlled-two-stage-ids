@@ -1,0 +1,12 @@
+== CICIoT2023 validation
+ families 7: alpha_fam each = 0.00357, n_min family = 279; smallest family BruteForce 290
+ attack types 33; n_min type = 141; certifiable 28: alpha_type each = 0.00089
+ not certifiable (covered by family only): [('Backdoor_Malware', np.int64(93)), ('CommandInjection', np.int64(132)), ('Recon-PingSweep', np.int64(45)), ('Uploading_Attack', np.int64(35)), ('XSS', np.int64(91))]
+== CICIoMT2024 validation (Protocol A)
+ families 5: alpha_fam each = 0.00500, n_min family = 263; smallest family Spoofing 2407
+ attack types 18; n_min type = 129; certifiable 17: alpha_type each = 0.00147
+ not certifiable (covered by family only): [(np.str_('Recon-Ping_Sweep'), np.int64(111))]
+== CICIoMT2024 first 20% of test captures (Protocol B)
+ families 5: alpha_fam each = 0.00500, n_min family = 263; smallest family Spoofing 349
+ attack types 18; n_min type = 129; certifiable 17: alpha_type each = 0.00147
+ not certifiable (covered by family only): [(np.str_('Recon-Ping_Sweep'), np.int64(38))]

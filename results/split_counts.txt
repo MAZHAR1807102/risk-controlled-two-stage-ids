@@ -1,0 +1,21 @@
+              train  validation     test
+label                                   
+Benign       129538       27519    27709
+BruteForce     1541         290      319
+DDoS        3998500      857523   855981
+DoS          950656      203450   204245
+Mirai        309768       66091    66749
+Recon         41617        9015     8812
+Spoofing      57530       12306    12410
+Web            2821         657      626
+Total       5491971     1176851  1176851
+             train  validation    test
+label                                 
+Benign       2.359       2.338   2.355
+BruteForce   0.028       0.025   0.027
+DDoS        72.806      72.866  72.735
+DoS         17.310      17.288  17.355
+Mirai        5.640       5.616   5.672
+Recon        0.758       0.766   0.749
+Spoofing     1.048       1.046   1.055
+Web          0.051       0.056   0.053

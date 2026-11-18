@@ -1,0 +1,5 @@
+dataset,protocol,rule,reps,feasible,tau_median,violation_family,violation_type,violation_any,bypass_mean
+ciciot2023,random 50% of validation+test as calibration,point,200,1.0,0.05047498749374688,0.505,0.67,0.675,0.7733217369635664
+ciciot2023,random 50% of validation+test as calibration,ucb_typ,200,0.995,0.01660624744548866,0.0,0.0,0.0,0.646572501578007
+ciciomt2024,random contiguous 20% window per capture,point,100,1.0,0.376811655827914,0.64,0.72,0.72,0.9280397162503443
+ciciomt2024,random contiguous 20% window per capture,ucb_typ,100,1.0,0.011494497248624313,0.02,0.04,0.04,0.852921109262417

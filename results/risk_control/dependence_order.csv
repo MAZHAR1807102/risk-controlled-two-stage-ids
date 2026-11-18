@@ -1,0 +1,3 @@
+data,same_label_neighbours,expected_if_shuffled
+ciciot2023 validation (published CSV),0.08753112121340867,0.08741605705837757
+ciciomt2024 test captures,0.9999888488341766,0.14022774429912038

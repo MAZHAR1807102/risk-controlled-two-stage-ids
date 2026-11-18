@@ -1,0 +1,143 @@
+{
+  "run": "runs/seed42_sqrt",
+  "seed": 42,
+  "versions": {
+    "xgboost": "3.4.1",
+    "sklearn": "1.9.1",
+    "numpy": "2.5.4",
+    "python": "3.13.13",
+    "machine": "macOS-27.0.1-arm64-arm-64bit-Mach-O"
+  },
+  "data": {
+    "train_rows": 5491971,
+    "val_rows": 1176851,
+    "test_rows": 1176851,
+    "test_class_counts": {
+      "Benign": 27709,
+      "BruteForce": 319,
+      "DDoS": 855981,
+      "DoS": 204245,
+      "Mirai": 66749,
+      "Recon": 8812,
+      "Spoofing": 12410,
+      "Web": 626
+    }
+  },
+  "stage1": {
+    "params": {
+      "objective": "binary:logistic",
+      "max_depth": 6,
+      "eta": 0.3,
+      "tree_method": "hist",
+      "eval_metric": "logloss"
+    },
+    "rounds": 100,
+    "weighting": "group_balanced",
+    "train_seconds": 11.955681085586548,
+    "tau_target": 0.02,
+    "tau": 0.05,
+    "tau_by_target": {
+      "1%": 0.030000000000000002,
+      "2%": 0.05,
+      "5%": 0.138
+    },
+    "test_roc_auc": 0.9997211759056844,
+    "test_pr_auc_benign": 0.9878608420781135,
+    "test_at_tau": {
+      "tau": 0.05,
+      "benign_bypass": 0.7673680031758634,
+      "overall_fnr": 0.00032023892608572306,
+      "worst_group_miss": 0.019405356332274172,
+      "stealthy_miss": 0.01655614201290206,
+      "miss_BruteForce": 0.012539184952978056,
+      "miss_DDoS": 1.1682502298532327e-06,
+      "miss_DoS": 0.0,
+      "miss_Mirai": 0.0,
+      "miss_Recon": 0.019405356332274172,
+      "miss_Spoofing": 0.015471394037066882,
+      "miss_Web": 0.0
+    }
+  },
+  "stage2": {
+    "params": {
+      "objective": "multi:softprob",
+      "num_class": 8,
+      "max_depth": 10,
+      "eta": 0.05,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "lambda": 3.0,
+      "min_child_weight": 10,
+      "tree_method": "hist",
+      "eval_metric": "mlogloss"
+    },
+    "best_iteration": 261,
+    "weighting": "sqrt",
+    "class_weights": {
+      "Benign": 3.4465610749537197,
+      "BruteForce": 31.599721367660695,
+      "DDoS": 0.620348908464846,
+      "DoS": 1.2722512193932995,
+      "Mirai": 2.2287753542887168,
+      "Recon": 6.08063853352695,
+      "Spoofing": 5.1717483619274045,
+      "Web": 23.35516982135921
+    },
+    "train_seconds": 410.00218987464905
+  },
+  "test": {
+    "single_stage": {
+      "accuracy": 0.9960045919152042,
+      "macro_f1": 0.8620397882770898,
+      "macro_recall": 0.8529850914786858,
+      "weighted_f1": 0.9959878941596382,
+      "per_class_f1": {
+        "Benign": 0.9475806451612904,
+        "BruteForce": 0.6595744680851063,
+        "DDoS": 0.9998633064191071,
+        "DoS": 0.999534947473541,
+        "Mirai": 0.9999475659358357,
+        "Recon": 0.8567877521044008,
+        "Spoofing": 0.8872907625542468,
+        "Web": 0.54573885848319
+      },
+      "per_class_recall": {
+        "Benign": 0.9583528817351763,
+        "BruteForce": 0.5830721003134797,
+        "DDoS": 0.9998025657111548,
+        "DoS": 0.9996964429973806,
+        "Mirai": 0.9999700370042997,
+        "Recon": 0.860531093962778,
+        "Spoofing": 0.8649476228847703,
+        "Web": 0.5575079872204473
+      }
+    },
+    "two_stage": {
+      "accuracy": 0.9960844660878905,
+      "macro_f1": 0.8658661788435421,
+      "macro_recall": 0.8533868960163424,
+      "weighted_f1": 0.9960614644778105,
+      "per_class_f1": {
+        "Benign": 0.9493499554764024,
+        "BruteForce": 0.6813186813186813,
+        "DDoS": 0.9998633064191071,
+        "DoS": 0.999534947473541,
+        "Mirai": 0.9999475659358357,
+        "Recon": 0.8600918731923098,
+        "Spoofing": 0.8872168017198611,
+        "Web": 0.5496062992125984
+      },
+      "per_class_recall": {
+        "Benign": 0.9618896387455339,
+        "BruteForce": 0.5830721003134797,
+        "DDoS": 0.9998025657111548,
+        "DoS": 0.9996964429973806,
+        "Mirai": 0.9999700370042997,
+        "Recon": 0.860531093962778,
+        "Spoofing": 0.8646253021756648,
+        "Web": 0.5575079872204473
+      }
+    }
+  },
+  "wall_seconds": 533.2443137168884
+}

@@ -1,0 +1,143 @@
+{
+  "run": "runs/seed42",
+  "seed": 42,
+  "versions": {
+    "xgboost": "3.4.1",
+    "sklearn": "1.9.1",
+    "numpy": "2.5.4",
+    "python": "3.13.13",
+    "machine": "macOS-27.0.1-arm64-arm-64bit-Mach-O"
+  },
+  "data": {
+    "train_rows": 5491971,
+    "val_rows": 1176851,
+    "test_rows": 1176851,
+    "test_class_counts": {
+      "Benign": 27709,
+      "BruteForce": 319,
+      "DDoS": 855981,
+      "DoS": 204245,
+      "Mirai": 66749,
+      "Recon": 8812,
+      "Spoofing": 12410,
+      "Web": 626
+    }
+  },
+  "stage1": {
+    "params": {
+      "objective": "binary:logistic",
+      "max_depth": 6,
+      "eta": 0.3,
+      "tree_method": "hist",
+      "eval_metric": "logloss"
+    },
+    "rounds": 100,
+    "weighting": "group_balanced",
+    "train_seconds": 9.128525018692017,
+    "tau_target": 0.02,
+    "tau": 0.05,
+    "tau_by_target": {
+      "1%": 0.030000000000000002,
+      "2%": 0.05,
+      "5%": 0.138
+    },
+    "test_roc_auc": 0.9997211759056844,
+    "test_pr_auc_benign": 0.9878608420781135,
+    "test_at_tau": {
+      "tau": 0.05,
+      "benign_bypass": 0.7673680031758634,
+      "overall_fnr": 0.00032023892608572306,
+      "worst_group_miss": 0.019405356332274172,
+      "stealthy_miss": 0.01655614201290206,
+      "miss_BruteForce": 0.012539184952978056,
+      "miss_DDoS": 1.1682502298532327e-06,
+      "miss_DoS": 0.0,
+      "miss_Mirai": 0.0,
+      "miss_Recon": 0.019405356332274172,
+      "miss_Spoofing": 0.015471394037066882,
+      "miss_Web": 0.0
+    }
+  },
+  "stage2": {
+    "params": {
+      "objective": "multi:softprob",
+      "num_class": 8,
+      "max_depth": 10,
+      "eta": 0.05,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "lambda": 3.0,
+      "min_child_weight": 10,
+      "tree_method": "hist",
+      "eval_metric": "mlogloss"
+    },
+    "best_iteration": 149,
+    "class_weights": {
+      "Benign": 5.299575221170622,
+      "BruteForce": 445.48758922777415,
+      "DDoS": 0.1716884769288483,
+      "DoS": 0.7221291140012791,
+      "Mirai": 2.216162983264895,
+      "Recon": 16.49557572626571,
+      "Spoofing": 11.932841560924736,
+      "Web": 243.35213576745835
+    },
+    "train_seconds": 207.81258606910706,
+    "weighting": "balanced"
+  },
+  "test": {
+    "single_stage": {
+      "accuracy": 0.9951123804117938,
+      "macro_f1": 0.8050317632959376,
+      "macro_recall": 0.9026029856916644,
+      "weighted_f1": 0.995600018877494,
+      "per_class_f1": {
+        "Benign": 0.9420472153860177,
+        "BruteForce": 0.37770897832817335,
+        "DDoS": 0.9997750720207705,
+        "DoS": 0.99938578395746,
+        "Mirai": 0.9998876463406413,
+        "Recon": 0.8576449912126538,
+        "Spoofing": 0.8868785860870294,
+        "Web": 0.3769258330347546
+      },
+      "per_class_recall": {
+        "Benign": 0.9324768125879678,
+        "BruteForce": 0.7648902821316614,
+        "DDoS": 0.9995981219209304,
+        "DoS": 0.9997796763690666,
+        "Mirai": 0.9999550555064496,
+        "Recon": 0.8306854289605083,
+        "Spoofing": 0.8531829170024174,
+        "Web": 0.8402555910543131
+      }
+    },
+    "two_stage": {
+      "accuracy": 0.9951174787632419,
+      "macro_f1": 0.8050974641445955,
+      "macro_recall": 0.9026133686520903,
+      "weighted_f1": 0.9956042877144284,
+      "per_class_f1": {
+        "Benign": 0.9421692456303424,
+        "BruteForce": 0.37770897832817335,
+        "DDoS": 0.9997750720207705,
+        "DoS": 0.99938578395746,
+        "Mirai": 0.9998876463406413,
+        "Recon": 0.8576952369793193,
+        "Spoofing": 0.8869616222557399,
+        "Web": 0.377196127644317
+      },
+      "per_class_recall": {
+        "Benign": 0.9328016168032047,
+        "BruteForce": 0.7648902821316614,
+        "DDoS": 0.9995981219209304,
+        "DoS": 0.9997796763690666,
+        "Mirai": 0.9999550555064496,
+        "Recon": 0.8306854289605083,
+        "Spoofing": 0.8529411764705882,
+        "Web": 0.8402555910543131
+      }
+    }
+  },
+  "wall_seconds": 322.36091113090515
+}

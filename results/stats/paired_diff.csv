@@ -1,0 +1,15 @@
+baseline,quantity,mean,ci_low,ci_high
+xgb_single,macro_f1_diff (proposed - baseline),0.0038360895866561776,0.0025438260922440144,0.005261515978526565
+xgb_single,worst_miss_diff (proposed - baseline),0.0,0.0,0.0
+lgbm_single,macro_f1_diff (proposed - baseline),0.06468993729222193,0.0582929294649183,0.07167635107306862
+lgbm_single,worst_miss_diff (proposed - baseline),-0.026133688011018553,-0.06061334498834499,0.006330121744739181
+rf_single,macro_f1_diff (proposed - baseline),0.008041391625269878,0.0015198805941364025,0.013867573022112343
+rf_single,worst_miss_diff (proposed - baseline),0.01892028173541337,-0.0125059713375796,0.05226537769579378
+mlp_single,macro_f1_diff (proposed - baseline),0.1546578247316622,0.14566541986432183,0.16342635612644427
+mlp_single,worst_miss_diff (proposed - baseline),-0.18202961010514604,-0.22522417098101924,-0.13860473041928328
+ae_filter,macro_f1_diff (proposed - baseline),0.0061970942460653974,0.004591764077960278,0.007981839708494906
+ae_filter,worst_miss_diff (proposed - baseline),-0.006394655336234705,-0.016028225806451638,0.0
+unweighted_gk,macro_f1_diff (proposed - baseline),0.016779670810811855,0.013869697755132313,0.01991694329529487
+unweighted_gk,worst_miss_diff (proposed - baseline),-0.07169655162372178,-0.1025679758308157,-0.04584416777853063
+proposed_certified,macro_f1_diff (proposed - baseline),0.00016432927409474495,5.5951592203670745e-05,0.00031172570906840555
+proposed_certified,worst_miss_diff (proposed - baseline),0.0,0.0,0.0
