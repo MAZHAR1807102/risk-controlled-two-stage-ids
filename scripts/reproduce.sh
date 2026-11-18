@@ -21,6 +21,7 @@ $PY -u src/train_gatekeeper.py --params runs/seed42_sqrt/ids_params.h --out resu
 $PY -u src/calibration.py
 $PY -u src/risk_control.py
 $PY -u src/risk_coverage.py
+$PY -u src/risk_added.py           # whole-system (added-miss) certificate
 
 # 3. ns-3 (two-stage gateway)
 $PY src/make_ns3_traffic.py --rows 20000 --out ns3/traffic
@@ -32,11 +33,13 @@ $PY -u src/adaptive_sensitivity.py && $PY src/adaptive_reanalyze.py
 # 4. ns-3 (gateway under flooding)
 $PY -u src/run_overload.py
 $PY -u src/run_overload.py --queuing
+$PY -u src/run_overload.py --enforced   # authentication cost + per-check time limit
 
 # 5. Standalone C++ benchmark: second dataset, certified threshold, process CPU time
 $PY -u src/iomt_timing.py --run runs/iomt_seed42
 $PY -u src/certified_timing.py
 $PY -u src/cpu_timing.py
+$PY -u src/added_timing.py
 
 # 6. Baselines and statistics
 $PY -u src/baselines.py train && $PY -u src/baselines.py eval && $PY -u src/baselines.py time

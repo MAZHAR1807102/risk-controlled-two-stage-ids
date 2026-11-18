@@ -25,8 +25,14 @@ ns-3, next to an executed single-stage baseline, and the gateway is studied unde
 | Benign flows skipping Stage 2 | 76.7% | 61.2% |
 | Worst attack family skipped | 1.94% | 0.27% |
 | Worst attack type skipped | 4.9% | 0.66% |
-| Inference-time saving vs. single-stage, 90% benign (1 thread / all cores) | 68% / 52% | 54% / 38% |
+| Inference-time saving vs. single-stage, 90% benign (1 thread / all cores) | 68% / 52% (ns-3) | 54% / 38% (C++ gateway) |
 | Accuracy / macro-F1 | 99.61% / 0.868 (five seeds) | 99.61% / 0.866 (seed 42) |
+
+The same certified rule can also limit the misses the Gatekeeper **adds** to the whole system (attacks it skips that
+Stage 2 would have caught). At τ = 0.022, 64.6% of benign flows skip Stage 2, the Gatekeeper added at most 0.01% to the
+misses of any attack family on test, and the saving rises to 57% / 41% (standalone C++ gateway, 90% benign).
+With a hard time limit per check (2.5 ms) and the authentication cost included, the robot's delay stayed within its
+5 ms bound in all 63 simulated flood runs.
 
 The second dataset, CICIoMT2024 (Wi-Fi and MQTT), reaches 99.81% accuracy and a macro-F1 of
 0.936. There, the threshold needs on-site re-calibration, because the test captures differ from
@@ -67,6 +73,7 @@ Inputs are the raw flow features, scaled with the values in `ids_params.h`.
 | `src/train_gatekeeper.py` | Gatekeeper weighting study (unweighted, binary-balanced, family-balanced) |
 | `src/risk_control.py` | Observed and certified threshold rules; on-site re-calibration |
 | `src/risk_coverage.py`, `src/risk_dependence.py` | Resampling diagnostic and design effect of the certified rule |
+| `src/risk_added.py`, `src/added_timing.py` | Whole-system certificate on the misses the Gatekeeper adds, and its saving |
 | `src/baselines.py` | Six baselines; ONNX Runtime timing |
 | `src/stats_ci.py` | Bootstrap (seed + test, moving-block) and paired-difference intervals |
 | `src/run_experiments.py`, `src/adaptive_sensitivity.py`, `src/run_overload.py` | ns-3 experiments |

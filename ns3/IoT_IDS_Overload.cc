@@ -20,6 +20,11 @@
 //                                   (models an authenticated robot channel)
 //   --prioCap=r                     token bucket on the priority queue (packets/s, 0 = off)
 //   --timeScale=x                   multiply service times (e.g. 4 for a slower board)
+//   --authNs=n                      cost of authenticating one packet, added to every check
+//                                   when --authPriority=1 (measured HMAC-SHA256: ~500 ns)
+//   --sMaxMs=x                      hard time limit per check (0 = off). A check that would take
+//                                   longer is cut at x ms and the flow gets the default verdict
+//                                   'suspicious' (fail-safe), as on a real-time gateway
 //
 // Output: one summary line appended to --summary, plus per-run traces (--trace prefix):
 //   <prefix>_robot.csv  time_s,delay_ms (one row per served robot packet)
@@ -314,6 +319,8 @@ bool g_priority = false, g_block = false;
 uint32_t g_capHigh = 100, g_capLow = 1000, g_detectK = 5;
 double g_detectRatio = 0.8;
 double g_timeScale = 1.0;
+double g_authNs = 0, g_sMaxNs = 0;
+uint64_t g_timeouts = 0;
 const uint32_t ROBOT_SRC = 1; // whitelisted: never blocked
 std::deque<Job> g_qHigh, g_qLow, g_qDev; // g_qDev used only with --drr
 bool g_drr = false, g_authPriority = false, g_drrTurnDev = true;
@@ -393,7 +400,13 @@ StartService()
                                          : g_benignPool[g_benignNext++ % g_benignPool.size()];
     int64_t ns;
     int verdict = Inspect(flow, &ns);
-    double service = ns * g_timeScale;
+    double service = ns * g_timeScale + (g_authPriority ? g_authNs : 0);
+    if (g_sMaxNs > 0 && service > g_sMaxNs)
+    {
+        service = g_sMaxNs;            // check cut at the time limit
+        verdict = BENIGN_CLASS + 1;    // default verdict: suspicious (fail-safe)
+        g_timeouts++;
+    }
     g_busyNs += service;
     g_busy = true;
     Simulator::Schedule(NanoSeconds(static_cast<int64_t>(service)), &FinishService, job, verdict);
@@ -506,10 +519,14 @@ main(int argc, char* argv[])
     cmd.AddValue("capHigh", "Robot queue capacity (packets)", g_capHigh);
     cmd.AddValue("capLow", "Shared queue capacity (packets)", g_capLow);
     cmd.AddValue("timeScale", "Multiply measured service times", g_timeScale);
+    cmd.AddValue("authNs", "Authentication cost per packet (ns), with --authPriority", g_authNs);
+    double sMaxMs = 0;
+    cmd.AddValue("sMaxMs", "Hard time limit per check (ms, 0 = off)", sMaxMs);
     cmd.AddValue("seed", "Run number for random streams", seed);
     cmd.AddValue("summary", "Summary CSV (appended)", summary);
     cmd.AddValue("trace", "Prefix for per-run trace files (empty = none)", trace);
     cmd.Parse(argc, argv);
+    g_sMaxNs = sMaxMs * 1e6;
 
     RngSeedManager::SetRun(seed);
     g_singleStage = (mode == "single-stage");
@@ -602,7 +619,7 @@ main(int argc, char* argv[])
                 << "_drop_blocked," << c << "_p50_ms," << c << "_p99_ms," << c << "_max_ms";
         }
         out << ",blocked_sources,devices_blocked,attacker_flagged,busy_frac,drr,spoof_robot,auth_priority,"
-               "prio_cap\n";
+               "prio_cap,auth_ns,smax_ms,timeouts\n";
     }
     out << mode << "," << g_priority << "," << g_block << "," << spoofed << "," << g_timeScale << ","
         << robotRate << "," << deviceRate << "," << attackRate;
@@ -614,7 +631,8 @@ main(int argc, char* argv[])
     }
     out << "," << g_blocked.size() << "," << g_deviceSrcBlocked.size() << ","
         << g_stats[ATTACKER].flaggedAttack << "," << g_busyNs / 1e9 / simTime << "," << g_drr << ","
-        << spoofRobot << "," << g_authPriority << "," << g_prioCap << "\n";
+        << spoofRobot << "," << g_authPriority << "," << g_prioCap << "," << g_authNs << "," << sMaxMs
+        << "," << g_timeouts << "\n";
 
     const Stats& r = g_stats[ROBOT];
     std::cout << mode << " prio=" << g_priority << " block=" << g_block << " spoofed=" << spoofed

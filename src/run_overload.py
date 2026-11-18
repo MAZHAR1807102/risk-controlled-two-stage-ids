@@ -5,6 +5,7 @@ robot loss/delay, benign-device loss/delay, blocking effect and IDS busy time.
 Run on an otherwise idle machine (service times are measured wall-clock inference times).
 
 Usage: .venv/bin/python src/run_overload.py            # full matrix
+       .venv/bin/python src/run_overload.py --enforced # auth cost + hard per-check limit
        .venv/bin/python src/run_overload.py --quick    # one seed, fewer rates
 """
 import argparse
@@ -34,12 +35,21 @@ SETUPS_QUEUING = {
     "two_prio_spoof_cap":   "--mode=two-stage --priority=1 --drr=1 --spoofRobot=0.5 --prioCap=200",
     "two_prio_spoof_auth":  "--mode=two-stage --priority=1 --drr=1 --spoofRobot=0.5 --authPriority=1",
 }
+# Enforced gateway (limitations fix): measured authentication cost (0.5 us HMAC-SHA256) in every
+# check and a hard per-check limit S_max = 2.5 ms with a fail-safe default verdict, so that the
+# assumptions of Proposition 2 hold and the robot delay must stay below (sigma + 1) S_max = 5 ms.
+SETUPS_ENFORCED = {
+    "two_prio_auth_enf":       "--mode=two-stage --priority=1 --authPriority=1 --authNs=500 --sMaxMs=2.5",
+    "two_prio_spoof_auth_enf": "--mode=two-stage --priority=1 --drr=1 --spoofRobot=0.5 --authPriority=1 "
+                               "--authNs=500 --sMaxMs=2.5",
+    "single_prio_auth_enf":    "--mode=single-stage --priority=1 --authPriority=1 --authNs=500 --sMaxMs=2.5",
+}
 TRACE_RATE = 1000
 TRACE_SETUPS = ["single", "two", "two_prio", "two_prio_block50"]
 
 
 def run(setup, rate, seed, summary, trace=None):
-    flags = SETUPS.get(setup) or SETUPS_QUEUING[setup]
+    flags = SETUPS.get(setup) or SETUPS_QUEUING.get(setup) or SETUPS_ENFORCED[setup]
     args = (f"IoT_IDS_Overload --params={RUN}/ids_params.h --l1={RUN}/layer1_gatekeeper.ubj "
             f"--l2={RUN}/layer2_multiclass.ubj --benign={HERE}/ns3/traffic/test_benign90_20000.csv "
             f"--flood={HERE}/ns3/traffic/test_natural_20000.csv --attackRate={rate} --seed={seed} "
@@ -56,10 +66,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--quick", action="store_true")
     ap.add_argument("--queuing", action="store_true", help="run the queuing-design study instead")
+    ap.add_argument("--enforced", action="store_true", help="run the enforced-gateway study instead")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
-    setups = SETUPS_QUEUING if a.queuing else SETUPS
-    tag = "_queuing" if a.queuing else ""
+    setups = SETUPS_ENFORCED if a.enforced else (SETUPS_QUEUING if a.queuing else SETUPS)
+    tag = "_enforced" if a.enforced else ("_queuing" if a.queuing else "")
     seeds = [1] if a.quick else [1, 2, 3]
     rates = [0, 1000, 4000] if a.quick else RATES
     summary = f"{OUT}/summary_raw{tag}.csv"
@@ -80,8 +91,8 @@ def main():
         raw[f"{c}_loss"] = (raw[f"{c}_drop_queue"] + raw[f"{c}_drop_blocked"]) / raw[f"{c}_arrived"].clip(lower=1)
     raw["attack_blocked_frac"] = raw["attacker_drop_blocked"] / raw["attacker_arrived"].clip(lower=1)
     raw.to_csv(f"{OUT}/summary{tag}.csv", index=False)
-    cols = ["robot_loss", "robot_p99_ms", "device_loss", "device_p99_ms", "attack_blocked_frac",
-            "devices_blocked", "busy_frac"]
+    cols = ["robot_loss", "robot_p99_ms", "robot_max_ms", "device_loss", "device_p99_ms", "attack_blocked_frac",
+            "devices_blocked", "busy_frac"] + (["timeouts"] if a.enforced else [])
     agg = raw.groupby(["setup", "attack_rate"])[cols].mean().reset_index()
     agg.to_csv(f"{OUT}/summary_mean{tag}.csv", index=False)
     pd.set_option("display.width", 200)
