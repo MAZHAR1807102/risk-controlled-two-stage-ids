@@ -22,6 +22,9 @@ $PY -u src/calibration.py
 $PY -u src/risk_control.py
 $PY -u src/risk_coverage.py
 $PY -u src/risk_added.py           # whole-system (added-miss) certificate
+$PY -u src/dup_analysis.py         # exact copies of flows across the splits
+$PY -u src/dup_robustness.py 3     # certificate without near copies (3 and 2 significant digits)
+$PY -u src/dup_robustness.py 2
 
 # 3. ns-3 (two-stage gateway)
 $PY src/make_ns3_traffic.py --rows 20000 --out ns3/traffic
