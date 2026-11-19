@@ -1,0 +1,139 @@
+{
+  "run": "runs/iomt_swap_seed42_sel",
+  "seed": 42,
+  "dataset": "ciciomt2024s",
+  "classes": [
+    "Benign",
+    "DDoS",
+    "DoS",
+    "MQTT",
+    "Recon",
+    "Spoofing"
+  ],
+  "versions": {
+    "xgboost": "3.4.1",
+    "sklearn": "1.9.1",
+    "numpy": "2.5.4",
+    "python": "3.13.13",
+    "machine": "macOS-27.0.1-arm64-arm-64bit-Mach-O"
+  },
+  "data": {
+    "train_rows": 1372055,
+    "val_rows": 242127,
+    "test_rows": 7160831,
+    "test_class_counts": {
+      "Benign": 192732,
+      "DDoS": 4779859,
+      "DoS": 1805529,
+      "MQTT": 262938,
+      "Recon": 103726,
+      "Spoofing": 16047
+    }
+  },
+  "stage1": {
+    "params": {
+      "objective": "binary:logistic",
+      "max_depth": 6,
+      "eta": 0.3,
+      "tree_method": "hist",
+      "eval_metric": "logloss"
+    },
+    "rounds": 100,
+    "weighting": "group_balanced",
+    "train_seconds": 2.012695789337158,
+    "tau_target": 0.02,
+    "tau": 0.001,
+    "tau_by_target": {
+      "1%": 0.001,
+      "2%": 0.001,
+      "5%": 0.001
+    },
+    "test_roc_auc": 0.9929112642253417,
+    "test_pr_auc_benign": 0.9568816993246179,
+    "test_at_tau": {
+      "tau": 0.001,
+      "benign_bypass": 0.40215947533362384,
+      "overall_fnr": 0.00017737979899539315,
+      "worst_group_miss": 0.03321493113977691,
+      "stealthy_miss": 0.003229590996861862,
+      "miss_DDoS": 0.0,
+      "miss_DoS": 0.0,
+      "miss_MQTT": 1.5212711741931559e-05,
+      "miss_Recon": 0.006738908277577464,
+      "miss_Spoofing": 0.03321493113977691
+    }
+  },
+  "stage2": {
+    "params": {
+      "objective": "multi:softprob",
+      "max_depth": 10,
+      "eta": 0.05,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "lambda": 3.0,
+      "min_child_weight": 10,
+      "tree_method": "hist",
+      "eval_metric": "mlogloss",
+      "num_class": 6
+    },
+    "best_iteration": 196,
+    "weighting": "sqrt",
+    "class_weights": {
+      "Benign": 3.568115474712278,
+      "DDoS": 0.6699441637513371,
+      "DoS": 1.071946517609708,
+      "MQTT": 2.741273422745441,
+      "Recon": 4.159299062303301,
+      "Spoofing": 16.569386926200554
+    },
+    "train_seconds": 21.98572611808777,
+    "early_stopping_data": "15% of train"
+  },
+  "test": {
+    "single_stage": {
+      "accuracy": 0.8866854978144296,
+      "macro_f1": 0.8309571016977239,
+      "macro_recall": 0.8491170151052785,
+      "weighted_f1": 0.8912757860620083,
+      "per_class_f1": {
+        "Benign": 0.886487848583268,
+        "DDoS": 0.9141491577540244,
+        "DoS": 0.825432853567418,
+        "MQTT": 0.9736174568326114,
+        "Recon": 0.8363532030326215,
+        "Spoofing": 0.5497020904164002
+      },
+      "per_class_recall": {
+        "Benign": 0.8213944752298529,
+        "DDoS": 0.8420329972076582,
+        "DoS": 0.9966076424139407,
+        "MQTT": 0.9984635161140649,
+        "Recon": 0.9273856120933999,
+        "Spoofing": 0.508817847572755
+      }
+    },
+    "two_stage": {
+      "accuracy": 0.8866887097321526,
+      "macro_f1": 0.8309820751596261,
+      "macro_recall": 0.8491369045545311,
+      "weighted_f1": 0.8912789681797645,
+      "per_class_f1": {
+        "Benign": 0.8865595507065006,
+        "DDoS": 0.9141491577540244,
+        "DoS": 0.825432853567418,
+        "MQTT": 0.9736228729095315,
+        "Recon": 0.8364259256038815,
+        "Spoofing": 0.5497020904164002
+      },
+      "per_class_recall": {
+        "Benign": 0.8215138119253679,
+        "DDoS": 0.8420329972076582,
+        "DoS": 0.9966076424139407,
+        "MQTT": 0.9984635161140649,
+        "Recon": 0.9273856120933999,
+        "Spoofing": 0.508817847572755
+      }
+    }
+  },
+  "wall_seconds": 76.0177149772644
+}

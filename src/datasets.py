@@ -45,6 +45,7 @@ class CICIoMT2024:
     stealthy = ["MQTT", "Recon", "Spoofing"]
     VAL_FRAC = 0.15
     DIR = os.path.join(ROOT, "CICIoMT2024", "WiFi_and_MQTT")
+    FOLDERS = {"train": "train", "test": "test"}  # where the model / the evaluation captures come from
 
     @staticmethod
     def attack_name(path):
@@ -68,7 +69,7 @@ class CICIoMT2024:
         raise ValueError(f"unmapped CICIoMT2024 file: {attack}")
 
     def load(self, split, frac=1.0):
-        folder = "test" if split == "test" else "train"
+        folder = self.FOLDERS["test"] if split == "test" else self.FOLDERS["train"]
         Xs, gs, raws, feats = [], [], [], None
         for path in sorted(glob.glob(os.path.join(self.DIR, folder, "*.csv"))):
             df = pd.read_csv(path)
@@ -86,6 +87,14 @@ class CICIoMT2024:
             raws.append(np.full(len(df), attack, dtype=object))
             gs.append(np.full(len(df), self.family(attack), dtype=object))
         return np.concatenate(Xs), np.concatenate(gs).astype(str), np.concatenate(raws).astype(str), feats
+
+
+class CICIoMT2024Swapped(CICIoMT2024):
+    """Capture-level replication: the roles of the CIC train and test captures are swapped. The model is
+    trained on the test captures (validation = their last 15%), and the separate train captures play the
+    new site."""
+    name = "ciciomt2024s"
+    FOLDERS = {"train": "test", "test": "train"}
 
 
 class CICIoT2023Temporal(CICIoT2023):
@@ -123,7 +132,8 @@ class CICIoT2023Random(CICIoT2023Temporal):
         return X[idx], g[idx], raw[idx], parts[0][3]
 
 
-DATASETS = {d.name: d for d in (CICIoT2023(), CICIoMT2024(), CICIoT2023Temporal(), CICIoT2023Random())}
+DATASETS = {d.name: d for d in (CICIoT2023(), CICIoMT2024(), CICIoT2023Temporal(), CICIoT2023Random(),
+                                 CICIoMT2024Swapped())}
 
 
 def get_dataset(name):

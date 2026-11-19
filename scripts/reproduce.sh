@@ -35,6 +35,11 @@ $PY -u src/pipeline.py --dataset ciciot2023t --run runs/t23_seed42_sel --seed 42
 $PY -u src/pipeline.py --dataset ciciot2023r --run runs/r23_seed42_sel --seed 42 --select-frac 0.15 > logs/runs/r23_seed42_sel.log 2>&1
 $PY -u src/temporal_cert.py ciciot2023t
 $PY -u src/temporal_cert.py ciciot2023r
+# CICIoMT2024 Protocol B in detail: window time/addresses (full PCAPs), window position/size/block length, swapped captures
+$PY -u src/iomt_window_stats.py test
+$PY -u src/pipeline.py --dataset ciciomt2024s --run runs/iomt_swap_seed42_sel --seed 42 --select-frac 0.15 > logs/runs/iomt_swap_seed42_sel.log 2>&1
+$PY -u src/iomt_sensitivity.py orig
+$PY -u src/iomt_sensitivity.py swap
 
 # 3. ns-3 (two-stage gateway)
 $PY src/make_ns3_traffic.py --rows 20000 --out ns3/traffic
