@@ -54,7 +54,15 @@ $PY -u src/run_overload.py --queuing
 # Flow-record gateway (packets forwarded at once, IDS checks flow records, block rules); used in the paper.
 # Build first: copy ns3/IoT_IDS_FlowMeter.cc to ns-3 scratch/nested-subdir, add it to CMakeLists, ./ns3 build IoT_IDS_FlowMeter
 $PY -u src/run_flowmeter.py && $PY -u src/run_flowmeter.py --variants --append
+$PY -u src/run_flowmeter.py --queues --append   # queue sizes and robot traffic
 $PY src/flowmeter_table.py
+# Exposure in packets/bytes, other threshold rules, router estimate, flow shaping, no-IAT Gatekeeper
+$PY -u src/exposure.py
+$PY -u src/method_compare.py
+$PY -u src/router_offline.py
+$PY -u src/evasion.py
+$PY -u src/gatekeeper_no_iat.py
+$PY -u src/baselines.py time   # also writes p99.9 and max (timing_p999.csv)
 $PY -u src/run_overload.py --enforced   # authentication cost + per-check time limit
 
 # 5. Standalone C++ benchmark: second dataset, certified threshold, process CPU time

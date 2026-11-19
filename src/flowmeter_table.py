@@ -42,6 +42,18 @@ def main():
     for bots, rate in ((50, 16000), (1000, 64000)):
         t = k1[(k1["mode"] == "two-stage") & (k1.n_bots == bots) & (k1.attack_rate == rate)]
         lines.append(row(t.iloc[0], f"Block on first verdict / {bots}"))
+    raw = pd.read_csv("ns3/flowmeter/summary_raw.csv")
+    raw["bots_blocked_share"] = raw.bots_blocked / raw.bots.where(raw.bots > 0)
+    raw["robot_loss"] = 1 - raw.robot_forwarded / raw.robot_arrived
+    lines.append(r"\midrule")
+    lines.append(r"\multicolumn{9}{@{}l}{(c) Queue settings and robot traffic (two-stage; one seed; 1{,}000 bots at 128k)} \\ \midrule")
+    qnames = {"main_two": "Main setup", "recq100_two": "Record queues 100", "recq10000_two": "Record queues 10{,}000",
+              "dpq1000_two": "Data-plane queue 1{,}000", "robot1000_two": "Robot 1{,}000 packets/s",
+              "robotpoisson_two": "Robot random timing"}
+    for lab, name in qnames.items():
+        t = raw[(raw.label == lab) & (raw.seed == 1) & (raw.n_bots == 1000) & (raw.attack_rate == 128000)]
+        if len(t):
+            lines.append(row(t.iloc[0], name))
     open(OUT, "w").write("\n".join(lines) + "\n")
     print("\n".join(lines))
 

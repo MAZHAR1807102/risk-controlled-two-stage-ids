@@ -696,6 +696,10 @@ main(int argc, char* argv[])
     cmd.AddValue("summary", "Summary CSV (appended)", summary);
     cmd.AddValue("bots", "Per-bot detail CSV (empty = none)", botsOut);
     cmd.AddValue("label", "Setup name written to the summary", label);
+    cmd.AddValue("capRec", "IDS record queue size, per queue (records)", g_capRec);
+    cmd.AddValue("capDpLow", "Data-plane queue size for non-robot packets (packets)", g_capDpLow);
+    bool robotPoisson = false;
+    cmd.AddValue("robotPoisson", "Robot sends Poisson instead of periodic packets", robotPoisson);
     cmd.Parse(argc, argv);
     g_mitigationS = mitigationMs / 1e3;
     g_devBase = 100;
@@ -755,7 +759,7 @@ main(int argc, char* argv[])
         app->SetStartTime(Seconds(start));
         app->SetStopTime(Seconds(stop));
     };
-    addSender(0, robotRate, false, ROBOT, ROBOT_SRC, 1, 0.5, simTime);
+    addSender(0, robotRate, robotPoisson, ROBOT, ROBOT_SRC, 1, 0.5, simTime);
     addSender(1, deviceRate, true, DEVICE, g_devBase, nDevices, 0.5, simTime);
     addSender(2, attackRate, true, ATTACKER, 100000, nBots, floodStart, floodStop);
 

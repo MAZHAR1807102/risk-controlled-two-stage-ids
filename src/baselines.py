@@ -293,9 +293,11 @@ def time_methods(traffic="ns3/traffic/test_benign90_20000.csv", warmup=200, repe
         t = np.concatenate(pooled)
         rows.append({"method": m, "mean_us": t.mean(), "mean_sd_over_repeats": float(np.std(per_rep, ddof=1)),
                      "p50_us": np.median(t), "p95_us": np.quantile(t, 0.95), "p99_us": np.quantile(t, 0.99),
-                     "flows_per_s": 1e6 / t.mean(), "repeats": repeats})
+                     "p999_us": np.quantile(t, 0.999), "max_us": t.max(), "flows_per_s": 1e6 / t.mean(), "repeats": repeats})
         log(f"{m}: mean {t.mean():.1f} +- {np.std(per_rep, ddof=1):.1f} us, p99 {np.quantile(t, 0.99):.1f}")
-    pd.DataFrame(rows).to_csv(f"{OUT}/timing.csv", index=False)
+    # timing.csv holds the run used in the paper's comparison table; a later rerun with p99.9 and
+    # max (Supplementary Table S32) was saved as timing_p999.csv
+    pd.DataFrame(rows).to_csv(f"{OUT}/timing_p999.csv", index=False)
     print(pd.DataFrame(rows).to_string(index=False, float_format=lambda v: f"{v:.1f}"))
 
 
