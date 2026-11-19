@@ -51,6 +51,10 @@ $PY -u src/adaptive_sensitivity.py && $PY src/adaptive_reanalyze.py
 # 4. ns-3 (gateway under flooding)
 $PY -u src/run_overload.py
 $PY -u src/run_overload.py --queuing
+# Flow-record gateway (packets forwarded at once, IDS checks flow records, block rules); used in the paper.
+# Build first: copy ns3/IoT_IDS_FlowMeter.cc to ns-3 scratch/nested-subdir, add it to CMakeLists, ./ns3 build IoT_IDS_FlowMeter
+$PY -u src/run_flowmeter.py && $PY -u src/run_flowmeter.py --variants --append
+$PY src/flowmeter_table.py
 $PY -u src/run_overload.py --enforced   # authentication cost + per-check time limit
 
 # 5. Standalone C++ benchmark: second dataset, certified threshold, process CPU time
