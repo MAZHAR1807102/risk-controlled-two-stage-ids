@@ -32,7 +32,7 @@ def near_hash(X, digits=3):
     return pd.Series(v).map(hash).to_numpy()
 
 
-def main(digits=3):
+def main(digits=3, sel=False):
     os.makedirs(OUT, exist_ok=True)
     sfx = "" if digits == 3 else f"_{digits}sig"
     ds = get_dataset("ciciot2023")
@@ -56,7 +56,8 @@ def main(digits=3):
     pd.DataFrame(rows).to_csv(f"{OUT}/near_duplicates{sfx}.csv", index=False)
     print(pd.DataFrame(rows).to_string(index=False, float_format=lambda v: f"{v:.4f}"))
 
-    run = RUNS["ciciot2023"]
+    # --sel: use the Brain early-stopped on 15% of train (it never saw validation); the Gatekeeper is the same
+    run = "runs/seed42_sel" if sel else RUNS["ciciot2023"]
     v, t = D["validation"], D["test"]
     pv, flv = scores(run, v["X"], ds.classes)
     pt, flt = scores(run, t["X"], ds.classes)
@@ -75,7 +76,7 @@ def main(digits=3):
                       "n_cal": int(cv.sum()), "n_test": int(ct.sum())})
             out.append(r)
     res = pd.DataFrame(out)
-    res.to_csv(f"{OUT}/dedup_certificate{sfx}.csv", index=False)
+    res.to_csv(f"{OUT}/dedup_certificate{sfx}{'_sel' if sel else ''}.csv", index=False)
     print(res[["setting", "certified_quantity", "feasible", "n_cal", "n_test", "tau", "benign_bypass",
                "max_family_skip", "worst_family", "worst_family_added", "worst_type", "worst_type_skip",
                "worst_type_added"]].to_string(index=False, float_format=lambda x: f"{x:.4f}"))
@@ -83,4 +84,5 @@ def main(digits=3):
 
 if __name__ == "__main__":
     import sys
-    main(int(sys.argv[1]) if len(sys.argv) > 1 else 3)
+    args = [a for a in sys.argv[1:] if a != "--sel"]
+    main(int(args[0]) if args else 3, sel="--sel" in sys.argv)

@@ -1,0 +1,155 @@
+{
+  "run": "runs/seed42_sel",
+  "seed": 42,
+  "dataset": "ciciot2023",
+  "classes": [
+    "Benign",
+    "BruteForce",
+    "DDoS",
+    "DoS",
+    "Mirai",
+    "Recon",
+    "Spoofing",
+    "Web"
+  ],
+  "versions": {
+    "xgboost": "3.4.1",
+    "sklearn": "1.9.1",
+    "numpy": "2.5.4",
+    "python": "3.13.13",
+    "machine": "macOS-27.0.1-arm64-arm-64bit-Mach-O"
+  },
+  "data": {
+    "train_rows": 5491971,
+    "val_rows": 1176851,
+    "test_rows": 1176851,
+    "test_class_counts": {
+      "Benign": 27709,
+      "BruteForce": 319,
+      "DDoS": 855981,
+      "DoS": 204245,
+      "Mirai": 66749,
+      "Recon": 8812,
+      "Spoofing": 12410,
+      "Web": 626
+    }
+  },
+  "stage1": {
+    "params": {
+      "objective": "binary:logistic",
+      "max_depth": 6,
+      "eta": 0.3,
+      "tree_method": "hist",
+      "eval_metric": "logloss"
+    },
+    "rounds": 100,
+    "weighting": "group_balanced",
+    "train_seconds": 9.168251752853394,
+    "tau_target": 0.02,
+    "tau": 0.05,
+    "tau_by_target": {
+      "1%": 0.030000000000000002,
+      "2%": 0.05,
+      "5%": 0.138
+    },
+    "test_roc_auc": 0.9997211759056844,
+    "test_pr_auc_benign": 0.9878608420781135,
+    "test_at_tau": {
+      "tau": 0.05,
+      "benign_bypass": 0.7673680031758634,
+      "overall_fnr": 0.00032023892608572306,
+      "worst_group_miss": 0.019405356332274172,
+      "stealthy_miss": 0.01655614201290206,
+      "miss_BruteForce": 0.012539184952978056,
+      "miss_DDoS": 1.1682502298532327e-06,
+      "miss_DoS": 0.0,
+      "miss_Mirai": 0.0,
+      "miss_Recon": 0.019405356332274172,
+      "miss_Spoofing": 0.015471394037066882,
+      "miss_Web": 0.0
+    }
+  },
+  "stage2": {
+    "params": {
+      "objective": "multi:softprob",
+      "max_depth": 10,
+      "eta": 0.05,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "lambda": 3.0,
+      "min_child_weight": 10,
+      "tree_method": "hist",
+      "eval_metric": "mlogloss",
+      "num_class": 8
+    },
+    "best_iteration": 266,
+    "weighting": "sqrt",
+    "class_weights": {
+      "Benign": 3.446564462855807,
+      "BruteForce": 31.59790018550123,
+      "DDoS": 0.6203486731483092,
+      "DoS": 1.2722504219001107,
+      "Mirai": 2.2287736623811196,
+      "Recon": 6.080674903357491,
+      "Spoofing": 5.171772840485235,
+      "Web": 23.35443049314033
+    },
+    "train_seconds": 202.56264972686768,
+    "early_stopping_data": "15% of train"
+  },
+  "test": {
+    "single_stage": {
+      "accuracy": 0.9960555754296848,
+      "macro_f1": 0.8642595155922336,
+      "macro_recall": 0.8493451393462048,
+      "weighted_f1": 0.9960254559703047,
+      "per_class_f1": {
+        "Benign": 0.9487435394760292,
+        "BruteForce": 0.6715328467153284,
+        "DDoS": 0.9998580490566104,
+        "DoS": 0.9995178175000429,
+        "Mirai": 0.9999475651503007,
+        "Recon": 0.8584681525059396,
+        "Spoofing": 0.8872478237551054,
+        "Web": 0.5487603305785124
+      },
+      "per_class_recall": {
+        "Benign": 0.9605904218845862,
+        "BruteForce": 0.5768025078369906,
+        "DDoS": 0.9997978927102353,
+        "DoS": 0.9996866508360058,
+        "Mirai": 0.9999550555064496,
+        "Recon": 0.8610985020426691,
+        "Spoofing": 0.8664786462530217,
+        "Web": 0.5303514376996805
+      }
+    },
+    "two_stage": {
+      "accuracy": 0.9961065589441654,
+      "macro_f1": 0.8675507523216047,
+      "macro_recall": 0.8495991254680585,
+      "weighted_f1": 0.9960727146345301,
+      "per_class_f1": {
+        "Benign": 0.9498718313870692,
+        "BruteForce": 0.6930320150659134,
+        "DDoS": 0.9998580490566104,
+        "DoS": 0.9995178175000429,
+        "Mirai": 0.9999475651503007,
+        "Recon": 0.8604150130400272,
+        "Spoofing": 0.8871832961954279,
+        "Web": 0.5505804311774462
+      },
+      "per_class_recall": {
+        "Benign": 0.9628640513912448,
+        "BruteForce": 0.5768025078369906,
+        "DDoS": 0.9997978927102353,
+        "DoS": 0.9996866508360058,
+        "Mirai": 0.9999550555064496,
+        "Recon": 0.8610985020426691,
+        "Spoofing": 0.8662369057211926,
+        "Web": 0.5303514376996805
+      }
+    }
+  },
+  "wall_seconds": 409.66794896125793
+}

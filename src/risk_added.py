@@ -12,12 +12,16 @@ any family than running the Brain on every flow. The added-miss indicator still 
 tau, so the fixed-sequence argument of Proposition 1 and risk_control.pick apply unchanged:
 we only set the score of attacks the Brain calls benign to 2 (never below any tau).
 
-Stage 2 was early-stopped on the validation split, so it may look slightly better there than
-on new traffic. That makes the validation added-miss count larger, not smaller, so the
-certified threshold errs on the safe side.
+The calibration flows must not have been used to fit or select either model. The Gatekeeper is
+fitted on train only (fixed number of trees). The deployed Brain (runs/seed42_sqrt, runs/iomt_seed42)
+was early-stopped on the validation split, so for Protocol A its added-miss counts are NOT a valid
+certificate. With --sel, the Brain is the one early-stopped on 15% of the TRAIN split instead
+(pipeline.py --select-frac 0.15: runs/seed42_sel, runs/iomt_seed42_sel), so validation stays pure
+calibration data. Protocol B (calibration on the first 20% of the test captures) is valid for both.
 
-Usage: .venv/bin/python src/risk_added.py
+Usage: .venv/bin/python src/risk_added.py [--sel]
 """
+import sys
 import os
 
 import numpy as np
@@ -78,6 +82,12 @@ def evaluate(p, fam, typ, flagged, tau):
     return rows
 
 
+SEL = "--sel" in sys.argv
+if SEL:
+    RUNS = {"ciciot2023": "runs/seed42_sel", "ciciomt2024": "runs/iomt_seed42_sel"}
+SFX = "_sel" if SEL else ""
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     rows = []
@@ -111,7 +121,7 @@ def main():
         print(r, flush=True)
 
     res = pd.DataFrame(rows)
-    res.to_csv(f"{OUT}/added_miss.csv", index=False)
+    res.to_csv(f"{OUT}/added_miss{SFX}.csv", index=False)
     pd.set_option("display.width", 250)
     print(res[["dataset", "calibration", "certified_quantity", "feasible", "tau", "benign_bypass",
                "max_family_skip", "worst_family", "worst_family_added", "worst_type", "worst_type_added",
