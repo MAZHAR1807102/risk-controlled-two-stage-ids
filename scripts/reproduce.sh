@@ -14,6 +14,9 @@ $PY -u src/pipeline.py --run runs/seed42_sqrt --seed 42            > logs/runs/s
 for s in 1 2 3 4 5; do $PY -u src/pipeline.py --run runs/seed$s --seed $s > logs/runs/seed$s.log 2>&1; done
 $PY -u src/pipeline.py --run runs/seed42_balanced --seed 42 --stage2-weighting balanced > logs/runs/seed42_balanced.log 2>&1
 $PY -u src/pipeline.py --dataset ciciomt2024 --run runs/iomt_seed42 --seed 42 > logs/runs/iomt_seed42.log 2>&1
+# Brain early-stopped on 15% of train (never sees validation), for the whole-system certificate
+$PY -u src/pipeline.py --run runs/seed42_sel --seed 42 --select-frac 0.15 > logs/runs/seed42_sel.log 2>&1
+$PY -u src/pipeline.py --dataset ciciomt2024 --run runs/iomt_seed42_sel --seed 42 --select-frac 0.15 > logs/runs/iomt_seed42_sel.log 2>&1
 $PY src/aggregate.py --runs runs/seed1 runs/seed2 runs/seed3 runs/seed4 runs/seed5 --out results/seeds --boot 200
 
 # 2. Gatekeeper studies and threshold rules
@@ -21,10 +24,11 @@ $PY -u src/train_gatekeeper.py --params runs/seed42_sqrt/ids_params.h --out resu
 $PY -u src/calibration.py
 $PY -u src/risk_control.py
 $PY -u src/risk_coverage.py
-$PY -u src/risk_added.py           # whole-system (added-miss) certificate
+$PY -u src/risk_added.py --sel     # whole-system (added-miss) certificate, Brain that never saw validation
 $PY -u src/dup_analysis.py         # exact copies of flows across the splits
 $PY -u src/dup_robustness.py 3     # certificate without near copies (3 and 2 significant digits)
 $PY -u src/dup_robustness.py 2
+$PY -u src/dup_robustness.py 3 --sel
 
 # 3. ns-3 (two-stage gateway)
 $PY src/make_ns3_traffic.py --rows 20000 --out ns3/traffic
@@ -42,7 +46,7 @@ $PY -u src/run_overload.py --enforced   # authentication cost + per-check time l
 $PY -u src/iomt_timing.py --run runs/iomt_seed42
 $PY -u src/certified_timing.py
 $PY -u src/cpu_timing.py
-$PY -u src/added_timing.py
+$PY -u src/added_timing.py --sel
 
 # 6. Baselines and statistics
 $PY -u src/baselines.py train && $PY -u src/baselines.py eval && $PY -u src/baselines.py time

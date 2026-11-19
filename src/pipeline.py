@@ -107,6 +107,10 @@ def main():
     ap.add_argument("--stage2-weighting", choices=["balanced", "sqrt"], default="sqrt")
     ap.add_argument("--frac", type=float, default=1.0, help="row fraction; smoke tests only")
     ap.add_argument("--dataset", default="ciciot2023", choices=["ciciot2023", "ciciomt2024"])
+    ap.add_argument("--select-frac", type=float, default=0.0,
+                    help="if > 0: early-stop Stage 2 on this stratified random share of the TRAIN split "
+                         "(Stage 2 is fitted on the rest), so the validation split is never seen by "
+                         "Stage 2 and stays pure calibration data for the whole-system certificate")
     args = ap.parse_args()
     global FRAC, DS, CLASSES, BENIGN
     FRAC = args.frac
@@ -144,18 +148,29 @@ def main():
     log(f"tau by target (validation): {taus}; deployed tau = {tau:.3f}")
 
     # ---- Stage 2: Deep inspection -------------------------------------------------
-    log("Training Stage 2 (balanced multiclass, early stopping on validation) ...")
-    cw = class_weights(ytr, args.stage2_weighting)
+    if args.select_frac > 0:
+        # Selection split carved from train, stratified by class; validation is not touched.
+        rng = np.random.default_rng(args.seed)
+        sel = np.zeros(len(ytr), bool)
+        for c in np.unique(ytr):
+            i = np.flatnonzero(ytr == c)
+            sel[rng.choice(i, int(round(args.select_frac * len(i))), replace=False)] = True
+        X2, y2, Xes, yes = Xtr[~sel], ytr[~sel], Xtr[sel], ytr[sel]
+        log(f"Training Stage 2 (early stopping on {sel.sum()} held-out TRAIN rows; validation unseen) ...")
+    else:
+        X2, y2, Xes, yes = Xtr, ytr, Xva, yva
+        log("Training Stage 2 (balanced multiclass, early stopping on validation) ...")
+    cw = class_weights(y2, args.stage2_weighting)
     t = time.time()
-    d2 = xgb.QuantileDMatrix(Xtr, ytr, weight=cw[ytr].astype(np.float32))
-    # Validation weighted with the same class weights, so early stopping tracks the
+    d2 = xgb.QuantileDMatrix(X2, y2, weight=cw[y2].astype(np.float32))
+    # Early-stopping rows weighted with the same class weights, so early stopping tracks the
     # balanced objective instead of DDoS-dominated log-loss.
-    d2va = xgb.DMatrix(Xva, yva, weight=cw[yva].astype(np.float32))
+    d2va = xgb.DMatrix(Xes, yes, weight=cw[yes].astype(np.float32))
     stage2 = xgb.train({**STAGE2_PARAMS, **common}, d2, STAGE2_MAX_ROUNDS,
                        evals=[(d2va, "val")], early_stopping_rounds=STAGE2_EARLY_STOP,
                        verbose_eval=50)
     stage2_train_s = time.time() - t
-    del d2, d2va, Xtr
+    del d2, d2va, Xtr, X2, Xes
     # Keep only rounds up to the best one; the C++ predictor uses every saved tree.
     best = stage2.best_iteration
     stage2 = stage2[: best + 1]
@@ -222,7 +237,9 @@ def main():
         "stage2": {"params": STAGE2_PARAMS, "best_iteration": int(best),
                    "weighting": args.stage2_weighting,
                    "class_weights": dict(zip(CLASSES, map(float, cw))),
-                   "train_seconds": stage2_train_s},
+                   "train_seconds": stage2_train_s,
+                   "early_stopping_data": (f"{args.select_frac:.0%} of train" if args.select_frac > 0
+                                           else "validation")},
         "test": reports,
         "wall_seconds": time.time() - t_start,
     }
