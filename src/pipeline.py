@@ -106,7 +106,7 @@ def main():
     ap.add_argument("--nthread", type=int, default=-1)
     ap.add_argument("--stage2-weighting", choices=["balanced", "sqrt"], default="sqrt")
     ap.add_argument("--frac", type=float, default=1.0, help="row fraction; smoke tests only")
-    ap.add_argument("--dataset", default="ciciot2023", choices=["ciciot2023", "ciciomt2024"])
+    ap.add_argument("--dataset", default="ciciot2023", choices=["ciciot2023", "ciciomt2024", "ciciot2023t", "ciciot2023r"])
     ap.add_argument("--select-frac", type=float, default=0.0,
                     help="if > 0: early-stop Stage 2 on this stratified random share of the TRAIN split "
                          "(Stage 2 is fitted on the rest), so the validation split is never seen by "

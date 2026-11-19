@@ -29,6 +29,12 @@ $PY -u src/dup_analysis.py         # exact copies of flows across the splits
 $PY -u src/dup_robustness.py 3     # certificate without near copies (3 and 2 significant digits)
 $PY -u src/dup_robustness.py 2
 $PY -u src/dup_robustness.py 3 --sel
+# Time-ordered CICIoT2023 (per-attack CIC CSV files in data/CICIoT2023/per_attack_csv) and its random-split control
+$PY -u src/build_ciciot_temporal.py
+$PY -u src/pipeline.py --dataset ciciot2023t --run runs/t23_seed42_sel --seed 42 --select-frac 0.15 > logs/runs/t23_seed42_sel.log 2>&1
+$PY -u src/pipeline.py --dataset ciciot2023r --run runs/r23_seed42_sel --seed 42 --select-frac 0.15 > logs/runs/r23_seed42_sel.log 2>&1
+$PY -u src/temporal_cert.py ciciot2023t
+$PY -u src/temporal_cert.py ciciot2023r
 
 # 3. ns-3 (two-stage gateway)
 $PY src/make_ns3_traffic.py --rows 20000 --out ns3/traffic

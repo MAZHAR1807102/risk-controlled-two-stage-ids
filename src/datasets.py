@@ -88,7 +88,42 @@ class CICIoMT2024:
         return np.concatenate(Xs), np.concatenate(gs).astype(str), np.concatenate(raws).astype(str), feats
 
 
-DATASETS = {d.name: d for d in (CICIoT2023(), CICIoMT2024())}
+class CICIoT2023Temporal(CICIoT2023):
+    """CICIoT2023 per-attack CSV files (39 features), cut in time order inside every file:
+    first 70% train, next 15% validation, last 15% test. Built by src/build_ciciot_temporal.py."""
+    name = "ciciot2023t"
+    DIR = os.path.join(ROOT, "CICIoT2023", "temporal")
+
+    def load(self, split, frac=1.0):
+        z = np.load(os.path.join(self.DIR, f"{split}.npz"))
+        X, raw = z["X"], z["label"]
+        if frac < 1.0:
+            keep = np.random.default_rng(0).random(len(raw)) < frac
+            X, raw = X[keep], raw[keep]
+        lut = {l: macro_group(l) for l in np.unique(raw)}
+        g = np.array([lut[l] for l in raw])
+        return X, g, raw, [str(f) for f in z["features"]]
+
+
+class CICIoT2023Random(CICIoT2023Temporal):
+    """Control for CICIoT2023Temporal: the same rows, pooled and split 70/15/15 at random (seed 0),
+    so a difference between the two shows the effect of the time split alone."""
+    name = "ciciot2023r"
+
+    def load(self, split, frac=1.0):
+        parts = [CICIoT2023Temporal.load(self, s) for s in ("train", "validation", "test")]
+        X = np.concatenate([q[0] for q in parts])
+        g = np.concatenate([q[1] for q in parts])
+        raw = np.concatenate([q[2] for q in parts])
+        perm = np.random.default_rng(0).permutation(len(g))
+        a, b = int(round(0.70 * len(g))), int(round(0.85 * len(g)))
+        idx = np.sort(perm[{"train": slice(0, a), "validation": slice(a, b), "test": slice(b, None)}[split]])
+        if frac < 1.0:
+            idx = idx[np.random.default_rng(1).random(len(idx)) < frac]
+        return X[idx], g[idx], raw[idx], parts[0][3]
+
+
+DATASETS = {d.name: d for d in (CICIoT2023(), CICIoMT2024(), CICIoT2023Temporal(), CICIoT2023Random())}
 
 
 def get_dataset(name):
