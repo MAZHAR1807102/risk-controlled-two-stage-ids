@@ -74,6 +74,7 @@ Inputs are the raw flow features, scaled with the values in `ids_params.h`.
 | `src/risk_control.py` | Observed and certified threshold rules; on-site re-calibration |
 | `src/risk_coverage.py`, `src/risk_dependence.py` | Resampling diagnostic and design effect of the certified rule |
 | `src/risk_added.py --sel`, `src/added_timing.py --sel` | Whole-system certificate on the misses the Gatekeeper adds, and its saving. Uses the Brain in `runs/*_sel`, early-stopped on 15% of the train split (`pipeline.py --select-frac 0.15`), so the calibration flows are never used to fit or select a model |
+| `src/build_ciciot_temporal.py`, `src/temporal_cert.py` | Time-ordered CICIoT2023 test: every per-attack CIC file cut 70/15/15 in time order, threshold rules (observed, certified, design-effect corrected, whole system) and a random-split control. The two Brain models (~90 MB) are not stored; `pipeline.py --dataset ciciot2023t` rebuilds them |
 | `src/dup_analysis.py`, `src/dup_robustness.py` | Exact and near copies of flows across the splits; certified threshold re-picked without them |
 | `src/baselines.py` | Six baselines; ONNX Runtime timing |
 | `src/stats_ci.py` | Bootstrap (seed + test, moving-block) and paired-difference intervals |
