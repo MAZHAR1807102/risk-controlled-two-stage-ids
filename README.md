@@ -1,12 +1,12 @@
-# Risk-Controlled Two-Stage Intrusion Detection for Edge Gateways
+# Risk-Controlled Two-Stage Intrusion Detection for IoT Edge Gateways
 
 Code, trained models and result data for the paper
 
-> M. Islam, "Risk-Controlled and Flood-Resilient Two-Stage Intrusion Detection for Edge Gateways
-> of Autonomous Biohazard Robots" (manuscript under review).
+> M. Islam, "Risk-Controlled Two-Stage Intrusion Detection for IoT Edge Gateways" (manuscript under review).
 
-The system is a two-stage intrusion detection system (IDS) for the edge gateway of autonomous
-biohazard-collecting robots.
+The system is a two-stage intrusion detection system (IDS) for IoT edge gateways. A robot that
+collects biohazard waste serves as an illustrative safety-critical device; it is not tested on real
+robot traffic.
 
 - **Stage 1, the Gatekeeper:** a small binary XGBoost model (100 trees, depth 6). Flows it scores
   below a threshold τ skip deep inspection.
@@ -30,9 +30,18 @@ ns-3, next to an executed single-stage baseline, and the gateway is studied unde
 
 The same certified rule can also limit the misses the Gatekeeper **adds** to the whole system (attacks it skips that
 Stage 2 would have caught). At τ = 0.022, 64.6% of benign flows skip Stage 2, the Gatekeeper added at most 0.01% to the
-misses of any attack family on test, and the saving rises to 57% / 41% (standalone C++ gateway, 90% benign).
-With a hard time limit per check (2.5 ms) and the authentication cost included, the robot's delay stayed within its
-5 ms bound in all 63 simulated flood runs.
+misses of any attack family on test, and the saving rises to 57% / 40% (standalone C++ gateway, 90% benign).
+
+In a simulated flow-record gateway (packets forwarded at once, the IDS checks flow records of 10 or 100 packets
+off the forwarding path and installs block rules), the priority device lost no packet and waited at most 12 µs at
+up to 128,000 flood packets/s. Floods from 50 bots were blocked after 0.4 to 3.7 s; a flood spread over 1,000
+slow bots was not stopped in time.
+
+**Caveats.** The guarantee limits what the Gatekeeper skips, not what the whole IDS misses. Much of the bypass on
+CICIoT2023 comes from the IAT feature, which in the merged CSV behaves like a capture-session time stamp: an
+attacker who copies benign timing makes the Gatekeeper skip up to half of a family, and a Gatekeeper trained
+without IAT keeps the certificate but lets only 3% of benign flows skip Stage 2. All timings are host
+measurements (Apple M5), not gateway-board measurements.
 
 The second dataset, CICIoMT2024 (Wi-Fi and MQTT), reaches 99.81% accuracy and a macro-F1 of
 0.936. There, the threshold needs on-site re-calibration, because the test captures differ from
