@@ -6,6 +6,8 @@
   fig3_latency       per-packet latency ECDF, single- vs two-stage (75% benign)
   fig4_confusion     two-stage confusion matrix (row-normalised, test split)
   fig5_timeline      normal -> flood -> normal: static vs adaptive routing
+  fig6_overload      old per-packet gateway queue (kept for history)
+  fig6_flowmeter     flow-record gateway: time to block, leaked flood packets, robot delay
 
 Usage: .venv/bin/python src/make_figures.py   (writes figures/*.png and *.pdf)
 """
@@ -232,6 +234,37 @@ def fig6():
     save(fig, "fig6_overload")
 
 
+# ---- Figure 6 (flow-record gateway) ---------------------------------------------------------
+def fig6_flowmeter():
+    d = pd.read_csv("ns3/flowmeter/summary.csv")
+    d = d[(d.variant == "main") & (d.attack_rate > 0)]
+    series = [("two-stage", 50, NEW, "-", "s", "Two-stage, 50 bots"),
+              ("single-stage", 50, ORIG, "--", "o", "Single-stage, 50 bots"),
+              ("two-stage", 1000, THIRD, "-.", "D", "Two-stage, 1,000 bots"),
+              ("single-stage", 1000, "#e87ba4", ":", "v", "Single-stage, 1,000 bots")]
+    panels = [("d_total_ms_p50", 1e-3, "(a) Time to block, median (s)"),
+              ("attack_leak_share", 100, "(b) Flood packets let through (%)"),
+              ("robot_max_ms", 1e3, "(c) Largest robot delay ($\\mu$s)")]
+    fig, axes = plt.subplots(1, 3, figsize=(7.16, 2.6))
+    for ax, (col, mult, title) in zip(axes, panels):
+        for mode, bots, color, ls, mk, name in series:
+            t = d[(d["mode"] == mode) & (d.n_bots == bots)].sort_values("attack_rate")
+            y = t[col] * mult
+            if col == "d_total_ms_p50":
+                y = y.where(t.bots_blocked_share > 0)
+            ax.plot(t.attack_rate, y, color=color, ls=ls, marker=mk, ms=3.5, mec="white", mew=0.6, label=name)
+        ax.set_xscale("log")
+        ax.set_xticks([1000, 4000, 16000, 64000, 128000], ["1k", "4k", "16k", "64k", "128k"])
+        ax.minorticks_off()
+        ax.set_ylim(bottom=0)
+        ax.set_title(title, loc="left")
+        ax.set_xlabel("Flood rate (packets/s)")
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", ncol=4, fontsize=6.5, bbox_to_anchor=(0.5, -0.04))
+    fig.tight_layout(rect=(0, 0.07, 1, 1))
+    save(fig, "fig6_flowmeter")
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     fig1()
@@ -243,6 +276,8 @@ def main():
         fig5()
     if os.path.exists("ns3/overload/summary_mean.csv"):
         fig6()
+    if os.path.exists("ns3/flowmeter/summary.csv"):
+        fig6_flowmeter()
 
 
 if __name__ == "__main__":
