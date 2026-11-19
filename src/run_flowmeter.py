@@ -34,6 +34,15 @@ VARIANTS = {
     "fwd20us": "--fwdNs=20000 --dropNs=4000",
     "slow4x": "--timeScale=4",
 }
+# Queue-parameter sensitivity (--queues): record queues 100 / 10,000, data-plane queue 1,000,
+# robot at 1,000 packets/s periodic, robot Poisson at 100 packets/s (bursty)
+QUEUES = {
+    "recq100": "--capRec=100",
+    "recq10000": "--capRec=10000",
+    "dpq1000": "--capDpLow=1000",
+    "robot1000": "--robotRate=1000",
+    "robotpoisson": "--robotPoisson=1",
+}
 
 
 def run(label, flags, seed, summary):
@@ -53,13 +62,18 @@ def main():
     ap.add_argument("--variants", action="store_true", help="run the sensitivity variants (1 seed)")
     ap.add_argument("--append", action="store_true")
     ap.add_argument("--aggregate", action="store_true")
+    ap.add_argument("--queues", action="store_true", help="queue-parameter sensitivity (two-stage, 1 seed)")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     summary = f"{OUT}/summary_raw.csv"
     if not a.aggregate:
         if os.path.exists(summary) and not a.append:
             os.remove(summary)
-        if a.variants:
+        if a.queues:
+            for (v, vf), bots, rate in itertools.product(QUEUES.items(), (50, 1000), (16000, 128000)):
+                run(f"{v}_two", f"{MODES['two']} {vf} --nBots={bots} --attackRate={rate}", 1, summary)
+            variants, seeds = {}, []
+        elif a.variants:
             variants, seeds = {k: v for k, v in VARIANTS.items() if k != "main"}, [1]
         else:
             variants, seeds = {"main": ""}, ([1] if a.quick else [1, 2, 3])

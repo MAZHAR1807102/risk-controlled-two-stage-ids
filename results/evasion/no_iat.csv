@@ -1,0 +1,17 @@
+check,tau,feasible,benign_bypass,family,skip
+certified threshold,0.0017494955335773381,True,0.03323829802591216,,
+test skip,,,,BruteForce,0.0
+test skip,,,,Recon,0.0
+test skip,,,,Spoofing,8.058017727639001e-05
+test skip,,,,Web,0.0
+test skip,,,,DDoS,0.0
+test skip,,,,DoS,0.0
+test skip,,,,Mirai,0.0
+shaped timing,,,,BruteForce,0.0
+shaped timing,,,,Recon,0.0
+shaped timing,,,,Spoofing,0.00024174053182917003
+shaped timing,,,,Web,0.0
+shaped timing+sizes,,,,BruteForce,0.0
+shaped timing+sizes,,,,Recon,0.0
+shaped timing+sizes,,,,Spoofing,0.00016116035455278002
+shaped timing+sizes,,,,Web,0.0
