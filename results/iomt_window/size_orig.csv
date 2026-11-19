@@ -1,0 +1,8 @@
+window_start,window_size,rule,feasible,tau,bypass,worst_family,worst_family_skip,worst_type,worst_type_skip,violates_family,violates_type,cal_min_family_n,uncertified_types
+0.0,0.05,ucb_typ,False,1e-05,0.0,DDoS,0.0,MQTT-DDoS-Connect_Flood,0.0,False,False,88,4
+0.0,0.1,ucb_typ,False,1e-05,0.0,DDoS,0.0,ARP_Spoofing,0.0,False,False,175,2
+0.0,0.15,ucb_typ,False,1e-05,0.0,DDoS,0.0,ARP_Spoofing,0.0,False,False,262,1
+0.0,0.2,ucb_typ,True,0.011494497248624313,0.8414159880339039,Spoofing,0.0014336917562724014,Recon-VulScan,0.006045949214026602,False,False,349,1
+0.0,0.3,ucb_typ,True,0.02198924462231116,0.8989895152712354,Spoofing,0.004098360655737705,Recon-VulScan,0.015214384508990318,False,False,524,1
+0.0,0.4,ucb_typ,True,0.05047498749374688,0.938175855344797,Spoofing,0.010516252390057362,Recon-VulScan,0.054838709677419356,False,True,698,1
+0.0,0.5,ucb_typ,True,0.04347848924462232,0.9568685848002978,Spoofing,0.010321100917431193,Recon-VulScan,0.04448742746615087,False,False,872,1
