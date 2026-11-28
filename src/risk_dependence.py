@@ -49,7 +49,7 @@ def units(fam, typ, cal_typ=None, cal_fam=None):
     out = [("family", g, EPS) for g in np.unique(fam[att])]
     ct, cf = (typ, fam) if cal_typ is None else (cal_typ, cal_fam)
     types, counts = np.unique(ct[cf != "Benign"], return_counts=True)
-    out += [("type", t, EPS_TYPE) for t in types[counts >= n_min(EPS_TYPE, ALPHA / 2 / len(types))]]
+    out += [("type", t, EPS_TYPE) for t in types[counts >= n_min(EPS_TYPE, ALPHA)]]
     return out
 
 
@@ -59,9 +59,9 @@ def pick_D(p, fam, typ, D=1.0):
     d = (lambda u: max(1.0, D.get(u, 1.0))) if isinstance(D, dict) else (lambda u: max(1.0, D))
     att = fam != "Benign"
     types, counts = np.unique(typ[att], return_counts=True)
-    certifiable = [t for t, c in zip(types, counts) if c / d(t) >= n_min(EPS_TYPE, ALPHA / 2 / len(types))]
+    certifiable = [t for t, c in zip(types, counts) if c / d(t) >= n_min(EPS_TYPE, ALPHA)]
     fams = list(np.unique(fam[att]))
-    a_fam, a_typ = ALPHA / 2 / len(fams), ALPHA / 2 / max(len(certifiable), 1)
+    a_fam, a_typ = ALPHA, ALPHA  # no split (2026-11-27)
     ok = np.ones(len(GRID), bool)
     for lab, unit_list, a, eps in ((fam, fams, a_fam, EPS), (typ, certifiable, a_typ, EPS_TYPE)):
         for u in unit_list:

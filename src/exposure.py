@@ -21,7 +21,9 @@ from risk_added import scores
 from risk_control import ALPHA, EPS_TYPE, n_min
 
 OUT = "results/exposure"
-SETTINGS = [("certified skip", "runs/seed42_sqrt", 0.0166), ("whole system", "runs/seed42_sel", 0.0220)]
+from risk_control import certified_tau
+SETTINGS = [("certified skip", "runs/seed42_sqrt", certified_tau()),
+            ("whole system", "runs/seed42_sel", certified_tau(quantity="added"))]
 
 
 def main():
@@ -52,14 +54,14 @@ def main():
     _, fv, tv, _ = ds.load("validation")
     att = fv != "Benign"
     types, counts = np.unique(tv[att], return_counts=True)
-    nmin = n_min(EPS_TYPE, ALPHA / 2 / len(types))
+    nmin = n_min(EPS_TYPE, ALPHA)
     p, _ = scores("runs/seed42_sqrt", X, ds.classes)
     trows = []
     for t, c in zip(types, counts):
         m = typ == t
         trows.append({"type": t, "family": fam[m][0], "calibration_n": int(c), "n_min": int(nmin),
                       "certified_alone": bool(c >= nmin), "test_n": int(m.sum()),
-                      "test_skip": float((p[m] < 0.0166).mean())})
+                      "test_skip": float((p[m] < SETTINGS[0][2]).mean())})
     types_df = pd.DataFrame(trows).sort_values(["family", "type"])
     types_df.to_csv(f"{OUT}/types.csv", index=False)
     print(types_df[types_df.family.isin(["BruteForce", "Recon", "Spoofing", "Web"])].to_string(index=False))

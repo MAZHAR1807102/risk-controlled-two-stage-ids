@@ -1,51 +1,52 @@
-# Risk-Controlled Two-Stage Intrusion Detection for IoT Edge Gateways
+# Two-Stage Intrusion Detection With Per-Family Miss Control
 
 Code, trained models and result data for the paper
 
-> M. Islam, "Risk-Controlled Two-Stage Intrusion Detection for IoT Edge Gateways" (manuscript under review).
+> M. Islam, U. H. Tisha, "Two-Stage Intrusion Detection With Per-Family Miss Control: Certified Under Independence,
+> Tested on Time-Ordered Traffic" (manuscript under review).
 
-The system is a two-stage intrusion detection system (IDS) for IoT edge gateways. A robot that
-collects biohazard waste serves as an illustrative safety-critical device; it is not tested on real
-robot traffic.
+The system is a two-stage intrusion detection system (IDS) for IoT edge gateways.
 
-- **Stage 1, the Gatekeeper:** a small binary XGBoost model (100 trees, depth 6). Flows it scores
+- **Stage 1, the Gatekeeper:** a small binary XGBoost model (100 trees, depth 6). Flow records it scores
   below a threshold τ skip deep inspection.
-- **Stage 2, the Brain:** a multiclass XGBoost model (about 2,100 trees, 8 classes) that labels
-  every remaining flow.
+- **Stage 2, the Brain:** a multiclass XGBoost model that labels every remaining record. Any model can be
+  used here; we also test a Random Forest.
 
-The Gatekeeper gives every attack family equal weight. Its threshold is chosen on the validation
-split with one-sided Clopper–Pearson bounds, so that, with 95% confidence, no attack family is
-skipped more than 2% and no well-sampled attack type more than 5%. Both stages run in C++ inside
-ns-3, next to an executed single-stage baseline, and the gateway is studied under flooding.
+The Gatekeeper gives every attack family equal weight. Its threshold is chosen on calibration data with
+one-sided Clopper–Pearson bounds, every unit (family, and attack type with enough data) tested at the full
+α = 5% in a fixed order (Learn Then Test, no Bonferroni split). If the calibration flows are independent and
+match future traffic, then with 95% confidence no attack family **bypasses inspection** at a rate above 2%
+and no well-sampled type above 5%. The guarantee covers the bypass decision, not detection: the whole system
+still misses what the Brain misses. A variant bounds the misses the Gatekeeper adds to those of the Brain.
 
-## Key results (CICIoT2023 test split)
+## Key results
 
-| | Efficiency threshold (τ = 0.05) | Certified threshold (τ = 0.017) |
+**Main setting: our own flow records built from raw CICIoMT2024 packets**, labels from the attacker MAC
+addresses, separate time-ordered test captures (model `pMN`). Independence fails here, so these are empirical:
+
+| | CP-selected threshold | Whole-system threshold |
 |---|---|---|
-| Benign flows skipping Stage 2 | 76.7% | 61.2% |
-| Worst attack family skipped | 1.94% | 0.27% |
-| Worst attack type skipped | 4.9% | 0.66% |
-| Inference-time saving vs. single-stage, 90% benign (1 thread / all cores) | 68% / 52% (ns-3) | 54% / 38% (C++ gateway) |
-| Accuracy / macro-F1 | 99.61% / 0.868 (five seeds) | 99.61% / 0.866 (seed 42) |
+| Benign records skipping Stage 2 | 90.0% | 97.7% |
+| Worst attack family skipped / added | 1.3% (1 of 78 spoofing records) | 2.6% added (above the 2% target) |
+| Inference-time saving, 90% benign (1 thread / all cores) | 76% / 44% | 81% / 51% |
 
-The same certified rule can also limit the misses the Gatekeeper **adds** to the whole system (attacks it skips that
-Stage 2 would have caught). At τ = 0.022, 64.6% of benign flows skip Stage 2, the Gatekeeper added at most 0.01% to the
-misses of any attack family on test, and the saving rises to 57% / 40% (standalone C++ gateway, 90% benign).
+Over seven data settings (CIC CSV with and without artifacts, packet records with random and separate-capture
+splits), the Clopper–Pearson-selected rule met its 2% family target on test every time; the observed threshold
+failed in four. Macro-F1 of pMN is only 0.69 (DDoS and DoS confused per flow; ARP spoofing hard).
 
-In a simulated flow-record gateway (packets forwarded at once, the IDS checks flow records of 10 or 100 packets
-off the forwarding path and installs block rules), the priority device lost no packet and waited at most 12 µs at
-up to 128,000 flood packets/s. Floods from 50 bots were blocked after 0.4 to 3.7 s; a flood spread over 1,000
-slow bots was not stopped in time.
+**Reference setting: CICIoT2023 CSV** (independent random splits, where the certificate applies):
 
-**Caveats.** The guarantee limits what the Gatekeeper skips, not what the whole IDS misses. Much of the bypass on
-CICIoT2023 comes from the IAT feature, which in the merged CSV behaves like a capture-session time stamp: an
-attacker who copies benign timing makes the Gatekeeper skip up to half of a family, and a Gatekeeper trained
-without IAT keeps the certificate but lets only 3% of benign flows skip Stage 2. All timings are host
-measurements (Apple M5), not gateway-board measurements.
+| | Observed threshold (τ = 0.05) | Certified threshold (τ = 0.031) | Whole system (τ = 0.297) |
+|---|---|---|---|
+| Benign flows skipping Stage 2 | 76.7% | 69.6% | 94.8% |
+| Worst attack family skipped / added | 1.94% skipped | 1.00% skipped | 1.62% added |
+| Inference-time saving, 90% benign (1 thread / all cores) | 68% / 52% | 62% / 44% | 84% / 65% |
 
-The second dataset, CICIoMT2024 (Wi-Fi and MQTT), reaches 99.81% accuracy and a macro-F1 of
-0.936. There, the threshold needs on-site re-calibration, because the test captures differ from
-the training captures.
+**Caveats.** In the merged CICIoT2023 CSV, IAT holds the capture time stamp and Number/Weight encode CIC's
+packet window per attack type, so much of the CSV bypass rests on dataset artifacts. A padding attacker evades
+some scans and the spoofing records. All timings are host measurements (Apple M5), not gateway-board
+measurements. In the simulated flow-record gateway, the priority device lost no packet up to line rate, but above
+the data plane's capacity (about 330,000 packets/s on our host model) the IDS stops until the flood ends.
 
 ## Repository layout
 
@@ -68,6 +69,8 @@ the training captures.
 | `runs/iomt_seed42/` | The same for CICIoMT2024 |
 | `runs/seed1` … `runs/seed5` | Metrics of the five-seed study |
 | `runs/seed42_balanced/` | Metrics of the Stage 2 weighting ablation |
+| `runs/pkt_MN_sel/` | Main packet-record model pMN (CICIoMT2024 flow records, attacker-MAC labels, no timing features), Brain early-stopped on 15% of the train split |
+| `runs/seed42_sel/`, `runs/iomt_seed42_sel/` | Brains early-stopped on 15% of the train split (whole-system certificate) |
 
 The models are in XGBoost's binary format (`.ubj`) and give the same predictions as the JSON
 format. Load them with `xgboost.Booster(model_file=...)` in Python, or `XGBoosterLoadModel` in C/C++.
@@ -80,14 +83,21 @@ Inputs are the raw flow features, scaled with the values in `ids_params.h`.
 | `src/datasets.py` | Loaders for CICIoT2023 and CICIoMT2024 (family mapping, validation split) |
 | `src/pipeline.py` | Trains both stages, picks τ, evaluates, writes the models and `ids_params.h` |
 | `src/train_gatekeeper.py` | Gatekeeper weighting study (unweighted, binary-balanced, family-balanced) |
-| `src/risk_control.py` | Observed and certified threshold rules; on-site re-calibration |
+| `src/risk_control.py` | Observed and certified threshold rules (rule `ucb_typ`: no Bonferroni split; `ucb_typ_split`: the earlier, more conservative budget); on-site re-calibration |
+| `src/iut_cert.py` | Certified rule with and without the Bonferroni split over seven data settings |
+| `src/flow_records.py`, `src/build_packet_dataset.py` | Flow records built from the CICIoMT2024 packet captures; attacker-MAC labels; dataset splits |
+| `src/packet_cert.py`, `src/packet_timing.py`, `src/pkt_tradeoff.py` | Threshold rules, timing and trade-off curve per data setting |
+| `src/adaptive_attack.py`, `src/kitsune_eval.py`, `src/benign_block.py` | Padding attacker, cross-dataset test on Kitsune, benign hosts blocked by the three-verdict rule |
+| `src/cic_extractor.py`, `src/cic_validate.py`, `src/iat_dates.py` | Re-implementation of CIC's feature extraction, validated against the CSV; IAT = capture time stamp |
+| `ns3/flow_features.h`, `ns3/pcap_feature_check.cc`, `src/cpp_feature_check.py` | C++ port of the flow-record features, checked against Python |
+| `src/onnx_cost.py`, `src/baselines_tuned.py`, `src/rf_brain.py` | Cost with ONNX Runtime; tuned baselines; the Gatekeeper with a Random Forest Brain |
 | `src/risk_coverage.py`, `src/risk_dependence.py` | Resampling diagnostic and design effect of the certified rule |
 | `src/risk_added.py --sel`, `src/added_timing.py --sel` | Whole-system certificate on the misses the Gatekeeper adds, and its saving. Uses the Brain in `runs/*_sel`, early-stopped on 15% of the train split (`pipeline.py --select-frac 0.15`), so the calibration flows are never used to fit or select a model |
 | `src/build_ciciot_temporal.py`, `src/temporal_cert.py` | Time-ordered CICIoT2023 test: every per-attack CIC file cut 70/15/15 in time order, threshold rules (observed, certified, design-effect corrected, whole system) and a random-split control. The two Brain models (~90 MB) are not stored; `pipeline.py --dataset ciciot2023t` rebuilds them |
 | `src/iomt_window_stats.py`, `src/iomt_sensitivity.py` | CICIoMT2024 Protocol B in detail: what the calibration window holds (rows, seconds, addresses; needs the CIC PCAPs), window position and size, block length, and a replication with the CIC train and test captures swapped (`pipeline.py --dataset ciciomt2024s`) |
 | `ns3/IoT_IDS_FlowMeter.cc`, `src/run_flowmeter.py`, `src/flowmeter_table.py` | Flow-record gateway under flooding: packets are forwarded at once, a flow meter closes records of 10 (floods: 100) packets, the IDS checks records off the forwarding path and installs block rules. Robot delay, and time to block each attack flow split into formation, queue, inference and mitigation |
 | `src/exposure.py` | Skip and miss rates per family counted in flows, packets and bytes; calibration counts per attack type |
-| `src/method_compare.py` | Our family-wise Clopper-Pearson rule against conformal risk control, selective classification, group-conditional CRC and Learn-then-Test |
+| `src/method_compare.py` | Our rule against conformal risk control, selective classification, Mondrian CRC, PAC Mondrian calibration and Learn Then Test (Hoeffding; exact binomial with and without Bonferroni) |
 | `src/router_offline.py` | Offline copy of the adaptive router: bias of its bypass estimate and six further load patterns |
 | `src/evasion.py`, `src/gatekeeper_no_iat.py` | Flow-shaping attacker (benign timing or sizes copied), and a Gatekeeper trained without the IAT feature |
 | `src/dup_analysis.py`, `src/dup_robustness.py` | Exact and near copies of flows across the splits; certified threshold re-picked without them |

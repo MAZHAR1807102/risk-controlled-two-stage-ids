@@ -22,7 +22,8 @@ from datasets import get_dataset
 from risk_added import scores
 
 OUT = "results/evasion"
-TAU = 0.0166
+from risk_control import certified_tau
+TAU = certified_tau()
 GROUPS = {"timing": ["flow_duration", "Rate", "Srate", "Drate", "IAT"],
           "sizes": ["Tot sum", "Min", "Max", "AVG", "Std", "Tot size", "Number", "Magnitue", "Radius",
                     "Covariance", "Variance", "Weight"]}

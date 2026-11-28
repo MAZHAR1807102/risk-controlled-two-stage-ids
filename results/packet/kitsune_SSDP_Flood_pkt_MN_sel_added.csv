@@ -1,0 +1,3 @@
+group,records,gatekeeper_skip,brain_flags_attack,brain_predicts_DDoS,two_stage_calls_benign,miss_ci95_high
+attack (malicious packet),187835,1.0,0.0,0.0,1.0,1.0
+benign (clean record),264762,0.9968613320642691,0.003006473738678511,3.776977058641346e-06,0.9969973032383801,

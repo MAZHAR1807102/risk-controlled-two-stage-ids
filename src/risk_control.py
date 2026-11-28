@@ -1,7 +1,7 @@
 """Risk-controlled Gatekeeper thresholds (reviewer point 2.2).
 
 Three ways to pick tau on held-out calibration data, all with the same target eps:
-  point   largest tau whose *observed* worst-family miss rate <= eps (the observed rule)
+  point   largest tau whose *observed* worst-family miss rate <= eps (the original rule)
   ucb_fam largest tau whose one-sided 95% Clopper-Pearson upper bound on every family's
           miss rate <= eps, Bonferroni-corrected over families
   ucb_typ the same bound per attack type for types with enough calibration flows to be
@@ -30,9 +30,24 @@ from train_gatekeeper import scaler_from_header
 
 EPS = 0.02
 ALPHA = 0.05
+# Error budget of each unit. Fixed-sequence testing decides a failure at the first bad threshold by
+# one unit, so every unit is tested at the full alpha (no Bonferroni split; since 2026-11-27).
+UNIT_ALPHA = ALPHA
 OUT = "results/risk_control"
 RUNS = {"ciciot2023": "runs/seed42_sqrt", "ciciomt2024": "runs/iomt_seed42"}
 GRID = np.unique(np.concatenate([np.linspace(0.0005, 0.9995, 2000), np.geomspace(1e-5, 0.999, 400)]))
+
+
+def certified_tau(ds="ciciot2023", cal="validation", quantity="skip"):
+    """Certified threshold saved by risk_control.py (skip) or risk_added.py --sel (added)."""
+    import pandas as pd
+    if quantity == "skip":
+        d = pd.read_csv("results/risk_control/summary.csv")
+        d = d[(d.dataset == ds) & (d.calibration == cal) & (d.rule == "ucb_typ")]
+    else:
+        d = pd.read_csv("results/risk_control/added_miss_sel.csv")
+        d = d[(d.dataset == ds) & (d.calibration == cal) & (d.certified_quantity == "added")]
+    return float(d.tau.iloc[0])
 
 
 def cp_upper(k, n, alpha):
@@ -70,16 +85,21 @@ def pick(p, fam, typ, rule, eps=EPS, alpha=ALPHA):
     else:
         fam_cnt = miss_counts(p[att], fam[att], taus)
         typ_cnt = {}
-        if rule == "ucb_typ":
-            # Error budget: alpha/2 shared by the families, alpha/2 by the attack types.
+        # "ucb_typ_iut": Learn Then Test with exact binomial p-values. The failure event of the
+        # fixed-sequence rule is decided at the first bad threshold by ONE unit, so every unit can be
+        # tested at the full alpha (intersection-union test, no Bonferroni split). Valid under (A1)-(A2).
+        # Since 2026-11-27 "ucb_typ" is the no-split rule (paper); "ucb_typ_split" is the earlier budget.
+        iut = rule in ("ucb_typ", "ucb_typ_iut")
+        if rule in ("ucb_typ", "ucb_typ_iut", "ucb_typ_split"):
+            # Error budget (ucb_typ): alpha/2 shared by the families, alpha/2 by the attack types.
             types, counts = np.unique(typ[att], return_counts=True)
-            big = types[counts >= n_min(EPS_TYPE, alpha / 2 / len(types))]  # certifiable types
+            big = types[counts >= n_min(EPS_TYPE, alpha if iut else alpha / 2 / len(types))]  # certifiable types
             sel = np.isin(typ[att], big)
             typ_cnt = miss_counts(p[att][sel], typ[att][sel], taus)
-        a_fam = alpha / (2 if typ_cnt else 1) / len(fam_cnt)
+        a_fam = alpha if iut else alpha / (2 if typ_cnt else 1) / len(fam_cnt)
         ok = np.max([cp_upper(k, n, a_fam) for n, k in fam_cnt.values()], axis=0) <= eps
         if typ_cnt:
-            a_typ = alpha / 2 / len(typ_cnt)
+            a_typ = alpha if iut else alpha / 2 / len(typ_cnt)
             ok &= np.max([cp_upper(k, n, a_typ) for n, k in typ_cnt.values()], axis=0) <= EPS_TYPE
     if not ok.any():
         return float(taus[0]), False

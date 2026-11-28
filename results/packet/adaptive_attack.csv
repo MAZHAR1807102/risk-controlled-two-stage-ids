@@ -1,0 +1,7 @@
+capture,family,records,miss_no_attack,miss_adaptive_pad
+Recon-OS_Scan,Recon,16373,0.0,0.14
+Recon-Port_Scan,Recon,107121,0.0,0.04
+Recon-VulScan,Recon,2100,0.01,0.526
+Recon-Ping_Sweep,Recon,461,0.0,1.0
+MQTT-Malformed_Data,MQTT,439,0.002,0.077
+ARP_Spoofing,Spoofing,78,0.231,1.0

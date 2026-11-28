@@ -31,7 +31,7 @@ def violations(p, fam, typ, tau, cal_typ, cal_fam):
     att = fam != "Benign"
     fam_bad = max((p[fam == g] < tau).mean() for g in np.unique(fam[att])) > EPS
     types, counts = np.unique(cal_typ[cal_fam != "Benign"], return_counts=True)  # attack types only
-    certifiable = types[counts >= n_min(EPS_TYPE, ALPHA / 2 / len(types))]
+    certifiable = types[counts >= n_min(EPS_TYPE, ALPHA)]
     typ_bad = any((p[typ == t] < tau).mean() > EPS_TYPE for t in certifiable if (typ == t).any())
     return bool(fam_bad), bool(typ_bad)
 

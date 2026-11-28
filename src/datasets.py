@@ -132,8 +132,120 @@ class CICIoT2023Random(CICIoT2023Temporal):
         return X[idx], g[idx], raw[idx], parts[0][3]
 
 
+class CICIoMT2024Packet(CICIoMT2024):
+    """Clean flow records computed from the CICIoMT2024 PCAPs (src/flow_records.py, src/build_packet_dataset.py).
+    Split C: train/validation = the same train captures cut in time (85/15), test = the test captures."""
+    name = "ciciomt2024p"
+    SPLIT = "C"
+    DROP = ()
+    DIR = os.path.join(ROOT, "CICIoMT2024", "packet")
+
+    def _z(self, split):
+        return np.load(os.path.join(self.DIR, self.SPLIT, f"{split}.npz"))
+
+    def load(self, split, frac=1.0):
+        z = self._z(split)
+        feats = [str(f) for f in z["features"]]
+        keep = [i for i, f in enumerate(feats) if f not in self.DROP]
+        X, fam, typ = z["X"][:, keep], z["fam"].astype(str), z["typ"].astype(str)
+        if frac < 1.0:
+            m = np.random.default_rng(0).random(len(fam)) < frac
+            X, fam, typ = X[m], fam[m], typ[m]
+        return X, fam, typ, [feats[i] for i in keep]
+
+    def meta(self, split):
+        z = self._z(split)
+        return {k: z[k] for k in ("capture", "t0", "flow", "host_a", "host_b")}
+
+
+class CICIoMT2024PacketNoTime(CICIoMT2024Packet):
+    """Split C without any timing feature (what an attacker can set by delaying packets)."""
+    name = "ciciomt2024pn"
+    DROP = ("Rate", "Srate", "Drate", "IAT", "IAT_std", "IAT_min", "IAT_max", "Span")
+
+
+class CICIoMT2024PacketRandom(CICIoMT2024Packet):
+    """Control: the same records pooled and split 70/15/15 at random."""
+    name = "ciciomt2024pr"
+    SPLIT = "R"
+
+
+class CICIoMT2024PacketContext(CICIoMT2024Packet):
+    """Split C with gateway context features (ARP bindings, host peers/ports over the last 50 packets)."""
+    name = "ciciomt2024pc"
+    DIR = os.path.join(ROOT, "CICIoMT2024", "packet_ctx")
+
+
+class CICIoMT2024PacketContextNoTime(CICIoMT2024PacketContext):
+    """Split C with context features and without any timing feature."""
+    name = "ciciomt2024pcn"
+    DROP = CICIoMT2024PacketNoTime.DROP
+
+
+class CICIoMT2024PacketMAC(CICIoMT2024Packet):
+    """Split C, records labelled by attacker-MAC ground truth, without timing features (main setting)."""
+    name = "ciciomt2024pmn"
+    DIR = os.path.join(ROOT, "CICIoMT2024", "packet_mac")
+    DROP = CICIoMT2024PacketNoTime.DROP + tuple(["arp_reply_share", "arp_grat_share", "arp_ip_macs", "arp_mac_ips",
+                                                 "src_peers", "src_ports", "dst_peers", "dst_ports"])
+
+
+class CICIoMT2024PacketMACContext(CICIoMT2024PacketMAC):
+    """Attacker-MAC labels, context features, no timing."""
+    name = "ciciomt2024pmxn"
+    DROP = CICIoMT2024PacketNoTime.DROP
+
+
+class CICIoMT2024PacketMACNoOS(CICIoMT2024PacketMAC):
+    """Main MAC setting minus OS-fingerprint clues (TTL = Duration, Header_Length): does the model lean on the
+    attacker devices' operating system rather than on the attack? A large drop here = fingerprinting."""
+    name = "ciciomt2024pmno"
+    DROP = CICIoMT2024PacketMAC.DROP + ("Duration", "Header_Length")
+
+
+class CICIoMT2024PacketMACSwapArp(CICIoMT2024PacketMAC):
+    """Main MAC setting on the dataset where the two ARP_Spoofing captures swap roles (train<->test), so the
+    ARP test set is the larger capture (option C). Built into packet_mac_swaparp by build_packet_dataset."""
+    name = "ciciomt2024pmns"
+    DIR = os.path.join(ROOT, "CICIoMT2024", "packet_mac_swaparp")
+
+
+class CICIoMT2024PacketMACTiming(CICIoMT2024PacketMAC):
+    """Attacker-MAC labels, timing features, no context."""
+    name = "ciciomt2024pm"
+    DROP = ("arp_reply_share", "arp_grat_share", "arp_ip_macs", "arp_mac_ips", "src_peers", "src_ports", "dst_peers",
+            "dst_ports")
+
+
+class CICIoMT2024NoArtifacts(CICIoMT2024):
+    """CIC's CSV features without the three artifact columns (IAT = timestamp, Number/Weight = window size)."""
+    name = "ciciomt2024x"
+    DROP = ("IAT", "Number", "Weight")
+
+    def load(self, split, frac=1.0):
+        X, g, raw, feats = super().load(split, frac)
+        keep = [i for i, f in enumerate(feats) if f not in self.DROP]
+        return X[:, keep], g, raw, [feats[i] for i in keep]
+
+
+class CICIoT2023NoArtifacts(CICIoT2023):
+    """The merged CICIoT2023 CSV without IAT (recording time) and Number/Weight (window size by attack type)."""
+    name = "ciciot2023x"
+    DROP = ("IAT", "Number", "Weight")
+
+    def load(self, split, frac=1.0):
+        X, g, raw, feats = super().load(split, frac)
+        keep = [i for i, f in enumerate(feats) if f not in self.DROP]
+        return X[:, keep], g, raw, [feats[i] for i in keep]
+
+
 DATASETS = {d.name: d for d in (CICIoT2023(), CICIoMT2024(), CICIoT2023Temporal(), CICIoT2023Random(),
-                                 CICIoMT2024Swapped())}
+                                 CICIoMT2024Swapped(), CICIoMT2024Packet(), CICIoMT2024PacketNoTime(),
+                                 CICIoMT2024PacketRandom(), CICIoMT2024NoArtifacts(), CICIoMT2024PacketContext(),
+                                 CICIoMT2024PacketContextNoTime(), CICIoMT2024PacketMAC(), CICIoMT2024PacketMACContext(),
+                                 CICIoMT2024PacketMACTiming(), CICIoMT2024PacketMACNoOS(),
+                                 CICIoMT2024PacketMACSwapArp(),
+                                 CICIoT2023NoArtifacts())}
 
 
 def get_dataset(name):

@@ -45,6 +45,30 @@ QUEUES = {
 }
 
 
+# Referee runs (2026-11-27). ONNX scales: Stage 1 6.25 vs 24 us, Stage 2 87 vs 2,000 us (one thread).
+ONNX_FLAGS = "--t1Scale=0.26 --t2Scale=0.044"
+HIGH_RATES = [256000, 512000, 1000000, 1480000]   # 1.48 M = 64-byte line rate of 1 Gbps
+FORGED_RATES = [16000, 128000, 512000, 1480000, 2500000]
+
+
+def _onnx():
+    return [(f"onnx_{m}", f"{mf} {ONNX_FLAGS} --nBots={b} --attackRate={r}", s)
+            for (m, mf), b, r, s in itertools.product(MODES.items(), (50, 1000), RATES, (1, 2, 3))]
+
+
+def _linerate():
+    return [(f"linerate_{m}", f"{mf} --nBots={b} --attackRate={r}", s)
+            for (m, mf), b, r, s in itertools.product(MODES.items(), (50, 1000), HIGH_RATES, (1, 2, 3))]
+
+
+def _forged():
+    return [(f"forged_q{q}_two", f"{MODES['two']} --attackRate=0 --forgedRate={r} --authInQueue={q}", s)
+            for q, r, s in itertools.product((0, 1), FORGED_RATES, (1, 2, 3))]
+
+
+SETS = {"onnx": _onnx, "linerate": _linerate, "forged": _forged}
+
+
 def run(label, flags, seed, summary):
     args = (f"IoT_IDS_FlowMeter --params={RUN}/ids_params.h --l1={RUN}/layer1_gatekeeper.ubj "
             f"--l2={RUN}/layer2_multiclass.ubj --benign={HERE}/ns3/traffic/test_benign90_20000.csv "
@@ -63,9 +87,35 @@ def main():
     ap.add_argument("--append", action="store_true")
     ap.add_argument("--aggregate", action="store_true")
     ap.add_argument("--queues", action="store_true", help="queue-parameter sensitivity (two-stage, 1 seed)")
+    ap.add_argument("--set", choices=list(SETS), help="referee runs, written to summary_raw_<set>.csv")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     summary = f"{OUT}/summary_raw.csv"
+    if a.set:
+        summary = f"{OUT}/summary_raw_{a.set}.csv"
+        if not a.aggregate:
+            if os.path.exists(summary) and not a.append:
+                os.remove(summary)
+            for label, flags, seed in SETS[a.set]():
+                run(label, flags, seed, summary)
+        d = pd.read_csv(summary)
+        d["robot_loss"] = 1 - d.robot_forwarded / d.robot_arrived
+        d["bots_blocked_share"] = d.bots_blocked / d.bots.where(d.bots > 0)
+        keys = ["label", "mode", "n_bots", "attack_rate", "forged_rate", "auth_in_queue"]
+        agg = d.groupby(keys).agg(runs=("seed", "count"), robot_loss=("robot_loss", "mean"),
+                                  robot_max_ms=("robot_max_ms", "max"), robot_p99_ms=("robot_p99_ms", "max"),
+                                  device_loss=("device_drop_dp", "sum"), dp_busy=("dp_busy", "mean"),
+                                  ids_busy=("ids_busy", "mean"), dp_ns_max=("dp_ns_max", "max"),
+                                  bots_blocked_share=("bots_blocked_share", "mean"),
+                                  attack_leak_share=("attack_leak_share", "mean"),
+                                  d_total_ms_p50=("d_total_ms_p50", "mean"),
+                                  rec_dropped_attack=("rec_dropped_attack", "mean"),
+                                  devices_blocked=("devices_blocked", "mean"),
+                                  attacker_drop_dp=("attacker_drop_dp", "mean")).reset_index()
+        agg.to_csv(f"{OUT}/summary_{a.set}.csv", index=False)
+        pd.set_option("display.width", 250)
+        print(agg.round(4).to_string(index=False))
+        return
     if not a.aggregate:
         if os.path.exists(summary) and not a.append:
             os.remove(summary)

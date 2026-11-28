@@ -350,11 +350,11 @@
     66749
    ],
    "Recon": [
-    24,
+    88,
     8812
    ],
    "Spoofing": [
-    28,
+    91,
     12410
    ],
    "Web": [
@@ -424,7 +424,7 @@
     7224
    ],
    "DNS_Spoofing": [
-    15,
+    47,
     4570
    ],
    "DictionaryBruteForce": [
@@ -448,7 +448,7 @@
     83627
    ],
    "MITM-ArpSpoofing": [
-    13,
+    44,
     7840
    ],
    "Mirai-greeth_flood": [
@@ -464,11 +464,11 @@
     22536
    ],
    "Recon-HostDiscovery": [
-    2,
+    3,
     3331
    ],
    "Recon-OSScan": [
-    16,
+    60,
     2433
    ],
    "Recon-PingSweep": [
@@ -476,7 +476,7 @@
     53
    ],
    "Recon-PortScan": [
-    6,
+    25,
     2082
    ],
    "SqlInjection": [
@@ -704,21 +704,21 @@
     416676
    ],
    "MQTT": [
-    28,
+    35,
     63715
    ],
    "Recon": [
-    96,
+    116,
     27676
    ],
    "Spoofing": [
-    29,
+    34,
     1744
    ]
   },
   "type": {
    "ARP_Spoofing": [
-    29,
+    34,
     1744
    ],
    "MQTT-DDoS-Connect_Flood": [
@@ -738,11 +738,11 @@
     8505
    ],
    "MQTT-Malformed_Data": [
-    28,
+    35,
     1747
    ],
    "Recon-OS_Scan": [
-    25,
+    31,
     3834
    ],
    "Recon-Ping_Sweep": [
@@ -754,7 +754,7 @@
     22622
    ],
    "Recon-VulScan": [
-    69,
+    83,
     1034
    ],
    "TCP_IP-DDoS-ICMP": [
@@ -1292,21 +1292,21 @@
     375006
    ],
    "MQTT": [
-    0,
+    2,
     57341
    ],
    "Recon": [
-    0,
+    13,
     24906
    ],
    "Spoofing": [
-    0,
+    2,
     1569
    ]
   },
   "type": {
    "ARP_Spoofing": [
-    0,
+    2,
     1569
    ],
    "MQTT-DDoS-Connect_Flood": [
@@ -1326,11 +1326,11 @@
     7654
    ],
    "MQTT-Malformed_Data": [
-    0,
+    2,
     1572
    ],
    "Recon-OS_Scan": [
-    0,
+    3,
     3450
    ],
    "Recon-Ping_Sweep": [
@@ -1342,7 +1342,7 @@
     20359
    ],
    "Recon-VulScan": [
-    0,
+    10,
     930
    ],
    "TCP_IP-DDoS-ICMP": [
@@ -1586,21 +1586,21 @@
     333339
    ],
    "MQTT": [
-    2,
+    3,
     50969
    ],
    "Recon": [
-    6,
+    13,
     22139
    ],
    "Spoofing": [
-    2,
+    5,
     1395
    ]
   },
   "type": {
    "ARP_Spoofing": [
-    2,
+    5,
     1395
    ],
    "MQTT-DDoS-Connect_Flood": [
@@ -1620,11 +1620,11 @@
     6804
    ],
    "MQTT-Malformed_Data": [
-    2,
+    3,
     1397
    ],
    "Recon-OS_Scan": [
-    1,
+    2,
     3067
    ],
    "Recon-Ping_Sweep": [
@@ -1636,7 +1636,7 @@
     18097
    ],
    "Recon-VulScan": [
-    5,
+    11,
     827
    ],
    "TCP_IP-DDoS-ICMP": [

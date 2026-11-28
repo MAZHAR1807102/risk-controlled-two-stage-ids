@@ -12,9 +12,10 @@ C1 150 us, C2 750 us). The defaults were fixed in the first router version and a
   patterns  - six load patterns not used before; cost vs an oracle that picks the cheaper static design
               per 500-flow block, static designs, switches, and the error of the router's saving estimate
 
-Usage: .venv/bin/python src/router_offline.py  -> results/router/{bias,patterns}.csv
+Usage: .venv/bin/python src/router_offline.py [onnx] -> results/router/{bias,patterns}[_onnx].csv
 """
 import os
+import sys
 
 import numpy as np
 import pandas as pd
@@ -130,14 +131,21 @@ def patterns(skip, bb, fam, rng):
 
 
 def main():
+    # "onnx": per-record costs of the fast inference path, measured by src/onnx_cost.py
+    global COSTS
+    suffix = ""
+    if len(sys.argv) > 1 and sys.argv[1] == "onnx":
+        st = pd.read_csv("results/onnx_cost/stages.csv").iloc[0]
+        COSTS = {"ONNX 1 thread": (float(st.T1_us), float(st.T2_us))}
+        suffix = "_onnx"
     os.makedirs(OUT, exist_ok=True)
     skip, bb, fam = load()
     b = bias(skip, bb, fam)
-    b.to_csv(f"{OUT}/bias.csv", index=False)
+    b.to_csv(f"{OUT}/bias{suffix}.csv", index=False)
     pd.set_option("display.width", 250)
     print(b.round(3).to_string(index=False))
     p = patterns(skip, bb, fam, np.random.default_rng(5))
-    p.to_csv(f"{OUT}/patterns.csv", index=False)
+    p.to_csv(f"{OUT}/patterns{suffix}.csv", index=False)
     print(p.round(3).to_string(index=False))
 
 

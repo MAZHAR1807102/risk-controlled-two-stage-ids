@@ -11,9 +11,14 @@ skipped at most eps = 2%". Methods (risk = share of attack flows skipped):
                  (holds in expectation per family, not with high probability)
   ltt_hoeffding  Learn-then-Test: Hoeffding upper bound per family, Bonferroni over families, conf. 1-alpha
   cp_family      ours: Clopper-Pearson upper bound per family, Bonferroni over families, conf. 1-alpha
+  ltt_binom      Learn-then-Test with exact binomial p-values, fixed sequence over tau, every family at
+                 the full alpha (intersection-union; simultaneous over families, valid under (A2))
+  pac_mondrian   PAC (high-probability) Mondrian calibration: each family's CP bound at alpha, a
+                 guarantee for each family separately, not simultaneous. Same thresholds as ltt_binom
+                 here; listed apart because it promises less.
 The fixed-split results (calibrate on validation, test once) are reported too.
 
-Usage: .venv/bin/python src/method_compare.py  -> results/method_compare/{coverage,fixed}.csv
+Usage: .venv/bin/python src/method_compare.py  -> results/method_compare/{coverage,fixed}_v2.csv
 """
 import os
 
@@ -26,7 +31,8 @@ from risk_control import ALPHA, EPS, GRID, RUNS, cp_upper, gatekeeper_scores, mi
 OUT = "results/method_compare"
 RNG = np.random.default_rng(13)
 REPS = 200
-METHODS = ["point", "crc_marginal", "sgr_marginal", "crc_family", "ltt_hoeffding", "cp_family"]
+METHODS = ["point", "crc_marginal", "sgr_marginal", "crc_family", "ltt_hoeffding", "cp_family", "ltt_binom",
+           "pac_mondrian"]
 
 
 def pick(method, p, fam):
@@ -43,6 +49,8 @@ def pick(method, p, fam):
                 ok &= k / n <= EPS
             elif method == "crc_family":
                 ok &= (k + 1) / (n + 1) <= EPS
+            elif method in ("ltt_binom", "pac_mondrian"):
+                ok &= cp_upper(k, n, ALPHA) <= EPS
             elif method == "ltt_hoeffding":
                 ok &= k / n + np.sqrt(np.log(1 / a) / (2 * n)) <= EPS
             else:
@@ -71,7 +79,7 @@ def main():
         worst, byp, overall = evaluate(pt, ft, tau) if ok else (0.0, 0.0, 0.0)
         fixed.append({"method": m, "feasible": ok, "tau": tau, "test_worst_family": worst, "test_overall_skip": overall,
                       "bypass": byp})
-    pd.DataFrame(fixed).to_csv(f"{OUT}/fixed.csv", index=False)
+    pd.DataFrame(fixed).to_csv(f"{OUT}/fixed_v2.csv", index=False)
     print(pd.DataFrame(fixed).round(4).to_string(index=False))
 
     P, F = np.concatenate([pv, pt]), np.concatenate([fv, ft])
@@ -88,7 +96,7 @@ def main():
         rows.append({"method": m, "reps": REPS, "feasible": r[:, 0].mean(), "family_violation": r[:, 1].mean(),
                      "bypass_mean": r[:, 2].mean(), "worst_family_mean": r[:, 3].mean()})
     cov = pd.DataFrame(rows)
-    cov.to_csv(f"{OUT}/coverage.csv", index=False)
+    cov.to_csv(f"{OUT}/coverage_v2.csv", index=False)
     print(cov.round(4).to_string(index=False))
 
 

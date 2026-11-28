@@ -1,0 +1,2 @@
+capture,packets,csv_rows,pcap_first,pcap_last,rows_with_big_iat,iat_x10_min,iat_x10_max,inside_capture
+Recon-Ping_Sweep_test.pcap,1852,186,1694105430.736417,1694105460.481408,93,1694105430.749125,1694105460.9391599,True

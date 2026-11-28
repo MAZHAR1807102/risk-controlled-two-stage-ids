@@ -58,6 +58,7 @@ enum SenderClass : uint8_t
 };
 const char* kClassName[] = {"robot", "device", "attacker"};
 const uint32_t ROBOT_SRC = 1;
+double g_t1Scale = 1.0, g_t2Scale = 1.0; // per-stage time multipliers (see Inspect)
 
 #define XGB_CHECK(call)                                                                  \
     do                                                                                   \
@@ -85,19 +86,21 @@ class IdsTag : public Tag
 
     uint32_t GetSerializedSize() const override
     {
-        return 5;
+        return 6;
     }
 
     void Serialize(TagBuffer i) const override
     {
         i.WriteU32(src);
         i.WriteU8(cls);
+        i.WriteU8(forged);
     }
 
     void Deserialize(TagBuffer i) override
     {
         src = i.ReadU32();
         cls = i.ReadU8();
+        forged = i.ReadU8();
     }
 
     void Print(std::ostream& os) const override
@@ -107,6 +110,7 @@ class IdsTag : public Tag
 
     uint32_t src = 0;
     uint8_t cls = 0;
+    uint8_t forged = 0; // claims to be the robot, but its HMAC check fails
 };
 
 // ---- Sender: constant-rate or Poisson UDP packets, each from one of nSrc sources ----------
@@ -114,8 +118,9 @@ class TaggedSender : public Application
 {
   public:
     void Setup(Address peer, double rate, bool poisson, uint8_t cls, uint32_t srcBase, uint32_t nSrc,
-               uint32_t size)
+               uint32_t size, bool forged = false)
     {
+        m_forged = forged;
         m_peer = peer;
         m_rate = rate;
         m_poisson = poisson;
@@ -155,6 +160,7 @@ class TaggedSender : public Application
         Ptr<Packet> p = Create<Packet>(m_size);
         IdsTag tag;
         tag.cls = m_cls;
+        tag.forged = m_forged;
         tag.src = m_srcBase + (m_nSrc > 1 ? m_uni->GetInteger(0, m_nSrc - 1) : 0);
         p->AddPacketTag(tag);
         m_sock->Send(p);
@@ -166,6 +172,7 @@ class TaggedSender : public Application
     double m_rate = 0;
     bool m_poisson = false;
     uint8_t m_cls = 0;
+    bool m_forged = false;
     uint32_t m_srcBase = 0, m_nSrc = 1, m_size = 512;
     Ptr<Socket> m_sock;
     EventId m_event;
@@ -284,13 +291,17 @@ Inspect(const std::vector<float>& rec, int64_t* ns)
     {
         inspect = Predict(g_stage1, x, &n)[0] >= g_tau;
     }
+    auto t1 = std::chrono::steady_clock::now();
     if (inspect)
     {
         const float* p = Predict(g_stage2, x, &n);
         verdict = static_cast<int>(std::max_element(p, p + n) - p);
     }
-    *ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - t0)
-              .count();
+    auto t2 = std::chrono::steady_clock::now();
+    // --t1Scale / --t2Scale emulate a faster or slower engine per stage (e.g. ONNX Runtime).
+    *ns = static_cast<int64_t>(
+        std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count() * g_t1Scale +
+        std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() * g_t2Scale);
     return verdict;
 }
 
@@ -344,6 +355,7 @@ struct Pkt
     Time arrival;
     uint32_t src;
     uint8_t cls;
+    bool forged; // claims priority; still waits for its HMAC check
 };
 
 struct Record
@@ -359,6 +371,11 @@ double g_activeTimeout = 0, g_mitigationS = 0.001, g_authNs = 500, g_timeScale =
 double g_fwdNs = 5000, g_dropNs = 1000; // network-stack cost per forwarded / dropped packet (assumed)
 uint32_t g_capDpHigh = 1000, g_capDpLow = 10000, g_capRecHigh = 100, g_capRec = 1000;
 bool g_drr = true, g_dpPriority = true, g_sharedCore = true;
+// --authInQueue=1: the HMAC check runs in software inside the data plane, so every packet that claims
+// the robot's identity enters the priority queue and is demoted only after its check fails.
+// --authInQueue=0: the priority class is known on arrival (dedicated interface or line-rate check).
+bool g_authInQueue = false;
+uint64_t g_authFailed = 0;
 uint32_t g_devBase = 100, g_nDevices = 50;
 
 std::deque<Pkt> g_dpHigh, g_dpLow;
@@ -537,17 +554,44 @@ DpDone(Pkt p, bool forwarded)
 }
 
 void
+DemoteDone(Pkt p)
+{
+    p.forged = false;
+    if (g_dpLow.size() >= g_capDpLow)
+    {
+        g_stats[p.cls].dropDp++;
+    }
+    else
+    {
+        g_dpLow.push_back(p);
+    }
+    g_dpBusy = false;
+    StartDp();
+}
+
+void
 StartDp()
 {
     if (g_dpBusy || (g_dpHigh.empty() && g_dpLow.empty()))
     {
         return;
     }
-    std::deque<Pkt>& q = !g_dpHigh.empty() ? g_dpHigh : g_dpLow;
+    bool fromHigh = !g_dpHigh.empty();
+    std::deque<Pkt>& q = fromHigh ? g_dpHigh : g_dpLow;
     Pkt p = q.front();
     q.pop_front();
     PreemptIds();
     g_dpBusy = true;
+    if (fromHigh && p.forged)
+    {
+        // HMAC check fails: the packet loses its priority and joins the normal queue.
+        double ans = g_authNs * g_timeScale;
+        g_dpNs.push_back(ans);
+        g_dpBusyNs += ans;
+        g_authFailed++;
+        Simulator::Schedule(NanoSeconds(static_cast<int64_t>(ans)), &DemoteDone, p);
+        return;
+    }
     double now = Simulator::Now().GetSeconds();
     // ---- real per-packet work, timed: firewall lookup, then meter update ----
     auto t0 = std::chrono::steady_clock::now();
@@ -594,14 +638,15 @@ GatewayRx(Ptr<const Packet> pkt, const Address&)
     Stats& st = g_stats[tag.cls];
     st.arrived++;
     g_flows[tag.src].arrived++;
-    bool high = g_dpPriority && tag.cls == ROBOT; // authenticated robot channel
+    // authenticated robot channel; forged claims share it only when the check runs in the queue
+    bool high = g_dpPriority && (tag.cls == ROBOT || (tag.forged && g_authInQueue));
     std::deque<Pkt>& q = high ? g_dpHigh : g_dpLow;
     if (q.size() >= (high ? g_capDpHigh : g_capDpLow))
     {
         st.dropDp++;
         return;
     }
-    q.push_back({Simulator::Now(), tag.src, tag.cls});
+    q.push_back({Simulator::Now(), tag.src, tag.cls, tag.forged != 0});
     StartDp();
 }
 
@@ -700,6 +745,13 @@ main(int argc, char* argv[])
     cmd.AddValue("capDpLow", "Data-plane queue size for non-robot packets (packets)", g_capDpLow);
     bool robotPoisson = false;
     cmd.AddValue("robotPoisson", "Robot sends Poisson instead of periodic packets", robotPoisson);
+    double forgedRate = 0;
+    uint32_t forgedBots = 50;
+    cmd.AddValue("forgedRate", "Packets per second that claim to be the robot (fail the HMAC check)", forgedRate);
+    cmd.AddValue("forgedBots", "Sources of the forged-robot flood", forgedBots);
+    cmd.AddValue("authInQueue", "HMAC check inside the data plane (1) or class known on arrival (0)", g_authInQueue);
+    cmd.AddValue("t1Scale", "Multiply the measured scaling + Stage 1 time", g_t1Scale);
+    cmd.AddValue("t2Scale", "Multiply the measured Stage 2 time", g_t2Scale);
     cmd.Parse(argc, argv);
     g_mitigationS = mitigationMs / 1e3;
     g_devBase = 100;
@@ -752,9 +804,9 @@ main(int argc, char* argv[])
     sink.Get(0)->GetObject<PacketSink>()->TraceConnectWithoutContext("Rx", MakeCallback(&GatewayRx));
 
     auto addSender = [&](uint32_t node, double rate, bool poisson, uint8_t cls, uint32_t srcBase,
-                         uint32_t nSrc, double start, double stop) {
+                         uint32_t nSrc, double start, double stop, bool forged = false) {
         Ptr<TaggedSender> app = CreateObject<TaggedSender>();
-        app->Setup(InetSocketAddress(gwAddr, port), rate, poisson, cls, srcBase, nSrc, 512);
+        app->Setup(InetSocketAddress(gwAddr, port), rate, poisson, cls, srcBase, nSrc, 512, forged);
         senders.Get(node)->AddApplication(app);
         app->SetStartTime(Seconds(start));
         app->SetStopTime(Seconds(stop));
@@ -762,6 +814,7 @@ main(int argc, char* argv[])
     addSender(0, robotRate, robotPoisson, ROBOT, ROBOT_SRC, 1, 0.5, simTime);
     addSender(1, deviceRate, true, DEVICE, g_devBase, nDevices, 0.5, simTime);
     addSender(2, attackRate, true, ATTACKER, 100000, nBots, floodStart, floodStop);
+    addSender(2, forgedRate, true, ATTACKER, 200000, forgedBots, floodStart, floodStop, true);
 
     if (g_activeTimeout > 0)
     {
@@ -833,7 +886,8 @@ main(int argc, char* argv[])
                "rec_wait_ms_p99,rec_wait_ms_max,rec_emitted_attack,rec_inspected_attack,rec_dropped_attack,"
                "rec_dropped_benign,rec_timeout,robot_false_alarms,devices_blocked,bots,bots_blocked,"
                "attack_leak_share,d_total_ms_p50,d_total_ms_p95,d_total_ms_max,d_formation_ms_mean,"
-               "d_queue_ms_mean,d_inference_ms_mean,d_mitigation_ms_mean\n";
+               "d_queue_ms_mean,d_inference_ms_mean,d_mitigation_ms_mean,forged_rate,auth_in_queue,auth_failed,"
+               "t1_scale,t2_scale\n";
     }
     out << label << "," << mode << "," << seed << "," << attackRate << "," << nBots << "," << g_wFlood << ","
         << g_wOther << "," << g_activeTimeout << "," << g_detectK << "," << g_detectRatio << "," << mitigationMs << "," << g_sharedCore
@@ -852,7 +906,8 @@ main(int argc, char* argv[])
         << "," << g_robotFalseAlarms << "," << devBlocked << "," << bots << "," << botsBlocked << ","
         << (atkArrived ? double(atkForwarded) / atkArrived : NAN) << "," << Pct(dTot, 0.5) << ","
         << Pct(dTot, 0.95) << "," << Pct(dTot, 1.0) << "," << Mean(dForm) << "," << Mean(dQueue) << ","
-        << Mean(dInf) << "," << Mean(dMit) << "\n";
+        << Mean(dInf) << "," << Mean(dMit) << "," << forgedRate << "," << g_authInQueue << "," << g_authFailed
+        << "," << g_t1Scale << "," << g_t2Scale << "\n";
 
     const Stats& r = g_stats[ROBOT];
     std::cout << label << " " << mode << " rate=" << attackRate << " bots=" << nBots << " | robot "

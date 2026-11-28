@@ -50,7 +50,7 @@ def run_rule(p, fam, typ, cal, rule):
     att = ev & (fam != "Benign")
     fs = {g: (p[ev & (fam == g)] < tau).mean() for g in np.unique(fam[att])}
     types, counts = np.unique(typ[cal & (fam != "Benign")], return_counts=True)
-    cert = types[counts >= n_min(EPS_TYPE, ALPHA / 2 / len(types))]
+    cert = types[counts >= n_min(EPS_TYPE, ALPHA)]
     ts = {t: (p[ev & (typ == t)] < tau).mean() for t in cert if (ev & (typ == t)).any()}
     wf, wt = max(fs, key=fs.get), max(ts, key=ts.get) if ts else None
     fb, tb = violations(p[ev], fam[ev], typ[ev], tau, typ[cal], fam[cal]) if ok else (False, False)
